@@ -17,12 +17,7 @@ class HSMapBot:
     def click_right_blank(self):
         self.hsmouse.click(self.win.width - 150 , int(self.win.height * 2 / 3 ),x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 0.5)
 
-    # def map_scoll_up(self):
-    #     locations = self.hsmatch.find_map_scoll(self.hssetting.screenshot())
-    #     if locations == []:
-    #         raise Exception("the map scoll can't be found")
-    #     self.ahk.mouse_move(locations[0][0] + random.randint(1,10), locations[0][1] + random.randint(1,10) , speed=30) 
-    #     self.ahk.mouse_drag(locations[0][0],locations[0][1]- self.hssetting.resolution.up_y_margin,speed=35) 
+
 
     def _move_action(self,move):
         self.hsmouse.click(move[0],move[1],random.randint(1,5),random.randint(1,5),sleep_time = 0.5)

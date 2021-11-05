@@ -13,23 +13,23 @@ class MAPACTIONS:
     warp = "warp"
 class HSTemplateMatch:
    
-    def __init__(self,resolution=r19201080,debug = False):
+    def __init__(self,resolution=r19201080):
         self.resolution = resolution
-        self.debug = debug
+        self.debug = self.resolution.debug
 
 
     def find_reward(self,imgpath):
         img = cv2.imread(imgpath)
         location,_ = self._feature_match(img,"reward",folder="templates/map")
         if location != []:
-            return [[location[0]  , location[1] ] ]
+            return [location ]
         return []
 
     def find_reward_done(self,imgpath):
         img = cv2.imread(imgpath)
         location,_ = self._feature_match(img,"done",folder="templates/map",min_match_nums=10)
         if location != []:
-            return [[location[0]  , location[1] ] ]
+            return [location ]
         return []    
 
     def find_vistors(self,imgpath):
@@ -78,9 +78,15 @@ class HSTemplateMatch:
         img = cv2.imread(imgpath)
         location = self._feature_match(img,"mysterious",min_match_nums = 15, folder="templates/map" )[0]
         if location != []:
-            return [[location[0]  , location[1] ] ] 
+            return [location ] 
         return [] 
 
+    def find_bounty_ok(self,imgpath):
+        img = cv2.imread(imgpath)
+        location = self._feature_match(img,"ok",min_match_nums = 10, folder="templates/map" )[0]
+        if location != []:
+            return [location ] 
+        return [] 
 
     def find_battle_ready(self,imgpath):
         return self._right_side_button(imgpath,"ready",min_match_nums=10)[0]

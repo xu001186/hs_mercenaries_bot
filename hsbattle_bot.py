@@ -71,14 +71,9 @@ class HSBattleBot:
             raise Exception("can't find the ready button for the battle")
 
 
-    def start_round(self,round_nums):
+    def start_round(self,round_nums,spells):
         self.click_left_blank()  
-        spells =[
-            [1,1,1],
-            [3,2,3]
-            ]
         print("start round %s" % round_nums)
-        
         spell_locations = self.hscontonur.list_card_spells(self.hssetting.screenshot()) # get spells
         if spell_locations != []:
             self.click_left_blank()  # make sure no spell is popped up before detecting the minions and cards
@@ -104,7 +99,7 @@ class HSBattleBot:
             if len(spell_locations) != None: 
                 spell_set = spells[ (round_nums-1) % len(spells) ]
                 spell_choose = spell_set[seq] - 1
-                if (len(spell_locations)) < spell_choose:
+                if (len(spell_locations)) <= spell_choose:
                     spell_choose = len(spell_locations) - 1
                 self.hsmouse.click(spell_locations[spell_choose][0], spell_locations[spell_choose][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 0.5) # move to spell and click
                 self.hsmouse.click(minions_locations[0][0], minions_locations[0][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 0.5) # move to first minion and click
@@ -112,10 +107,10 @@ class HSBattleBot:
         ready_location = self.wait_battle_ready_or_played_action(5)
         self.hsmouse.click(ready_location[0][0], ready_location[0][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
         time.sleep(8) # wait 8 sec to finish the round
-        self._battle_check(round_nums)
+        self._battle_check(round_nums,spells)
 
 
-    def _battle_check(self,round_nums):
+    def _battle_check(self,round_nums,spells):
         retry = 0 
         # check whether the round is finished or the battle is finished.
         battle_img = self.hssetting.screenshot()
@@ -134,11 +129,12 @@ class HSBattleBot:
             is_reward = self.hsmatch.find_reward(battle_img)
             retry +=1
             print("retry %s to find the ready or treasure button   " % retry)
+      
         if (retry >= 10):
             raise Exception("fail to wait the round complete")  
         
         if len(ready_location) != 0 : # start next round
-            self.start_round(round_nums+1)
+            self.start_round(round_nums+1,spells)
         if len(treasure_location) !=0 : # the battle is finished , choose the first treasure
             self._pick_treasure(treasure_location)
         if len(is_reward) !=0: # start to pickup all the rewards
@@ -152,7 +148,15 @@ class HSBattleBot:
         if done_location != []:
             self.hsmouse.click(done_location[0][0], done_location[0][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
         else:
-            print("fail to click the done rewards")                
+            raise Exception("fail to click the done rewards")  
+        time.sleep(5)
+        ok_location = self.hsmatch.find_bounty_ok(self.hssetting.screenshot())
+        if ok_location != []:
+            self.hsmouse.click(ok_location[0][0], ok_location[0][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
+        else:
+            raise Exception("fail to click ok")  
+
+
         self.battle_finished = True
 
     def _pick_treasure(self,treasure_location):

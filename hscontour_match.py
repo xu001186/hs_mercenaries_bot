@@ -11,9 +11,9 @@ from datetime import datetime
 
 class HSContonurMatch:
 
-    def __init__(self,resolution=r19201080,debug=False):
+    def __init__(self,resolution=r19201080):
         self.resolution = resolution
-        self.debug = debug
+        self.debug = self.resolution.debug
 
 
 
@@ -82,20 +82,57 @@ class HSContonurMatch:
         if len(array)  == 0:
             return array
         array_a = np.array(array)
-        
         if by_x:
             ind = np.lexsort((array_a[:,1],array_a[:,0]))    
         else:
             ind = np.lexsort((array_a[:,0],array_a[:,1]))    
-        
         return array_a[ind]
-   
+
     def list_allow_spell_cards(self,imgpath):
+        img = cv2.imread(imgpath)
+        img_gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+        kernel = np.ones((5, 5), 'uint8')
+        bg = cv2.dilate(img_gray, kernel)
+        img_decrease_bright=cv2.divide(img_gray, bg, scale=255)
+        img_without_bg=cv2.threshold(img_decrease_bright, 230, 255, cv2.THRESH_OTSU )[1] 
+        img_without_bg = cv2.bitwise_not(img_without_bg) 
+        self.debug_img("list_allow_move_cards_without_bg_img",img_without_bg)    
+        contours, _ = cv2.findContours(img_without_bg, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        cards_locations = []
+        minion_locations = []
+        h, w = img.shape[:2]
+        for contour in contours:
+            area = cv2.contourArea(contour)
+            arcLength = cv2.arcLength(contour, False)
+            if (( arcLength >= 500) and (area >= 1000)):
+                extTop = tuple(contour[contour[:, :, 1].argmin()][0])
+                extBot = tuple(contour[contour[:, :, 1].argmax()][0])                    
+                if  (h *1 / 2 < extTop[1] <=h*3 /4 and w/4 <= extTop[0] <= w*3/4 ): # the cards position
+                    cards_locations.append([extTop[0] - 50 , extTop[1] + 100])                    
+                if  (h *1 / 4 <= extBot[1] <=h*1 /2 and w/4 <= extBot[0] <= w*3/4 ): # the minions position
+                    minion_locations.append([extBot[0],extBot[1] - 100])
+                if self.debug:
+                    cv2.drawContours(img,[contour],0, (random.randint(0,256), random.randint(0,256), random.randint(0,256)),2  )
+        self.debug_img("list_allow_move_cards_contour_img",img)
+        if (cards_locations == [] or minion_locations ==[]):
+            return [],[]
+        cards_locations = HSContonurMatch.sort_2d_array(cards_locations)
+        minion_locations = HSContonurMatch.sort_2d_array(minion_locations)
+       
+        
+        if self.debug:
+            self._debug_img_with_text(minion_locations,img)
+            self._debug_img_with_text(cards_locations,img)
+            self.debug_img("list_allow_spell_cards",img)
+        return minion_locations, cards_locations
+
+
+    def list_allow_spell_cards_bak(self,imgpath):
         img = cv2.imread(imgpath)
 
         img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)  
         green_mask = cv2.inRange(img_hsv,(2,0,150),(22,35,255))
-        kernel = np.ones((5, 5), 'uint8')
+        kernel = np.ones((21, 21), 'uint8')
         dilate_img = cv2.dilate(green_mask, kernel)
        
         self.debug_img("list_allow_move_cards_dilate_img",dilate_img)    

@@ -10,6 +10,7 @@ class CONSTANT:
 
 #magic numbers for the different resolutions
 class r19201080:
+    debug = False
     # pickup treasure and vistor margin
     treasure_x_margin = 300
     treasure_y_margin = 200
@@ -35,7 +36,7 @@ class r19201080:
 
     path="1920x1080"
 
-
+from datetime import datetime
 class HSSetting:
   
     def __init__(self, monitor , resolution):
@@ -48,9 +49,10 @@ class HSSetting:
         # self.ahk.show_info_traytip("Starting", "loading files", slient=False, blocking=True)
         # self.ahk.show_info_traytip("started", "all files loaded successfully", slient=False, blocking=False)
         
-
+    
     def screenshot(self):
-        imgpath = 'files/screenshot.png'
+        filename = "{0}.png".format( datetime.now().strftime("%Y%m%d%H%M%S"))
+        imgpath = 'files/debug/' + filename
         sct = mss.mss()
         sct.shot(mon=self.monitor, output=imgpath)
         return imgpath

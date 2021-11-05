@@ -1,4 +1,3 @@
-from os import sep
 from hsbattle_bot import HSBattleBot
 from hsmap_bot import HSMapBot
 from hssetting import HSSetting
@@ -21,9 +20,8 @@ while True:
         print("start battle prepare")
         battle.battle_prepare([1,2,5])
         print("start round")
-        battle.start_round(1)
+        battle.start_round(1,   spells =[ [1,1,1],[3,2,3]])
         if battle.battle_finished:
             print("it's end")
             break
-
 
