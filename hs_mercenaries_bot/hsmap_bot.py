@@ -1,22 +1,12 @@
 
 import random
-from .hstemplate_match import HSTemplateMatch,MAPACTIONS
-from .hscontour_match import HSContonurMatch
+from .hstemplate_match import MAPACTIONS
+from .hsbot import HSBot
 
-
-class HSMapBot:
+class HSMapBot(HSBot):
     def __init__(self,hssetting,hsmouse):
-        self.hssetting = hssetting
-        self.hsmouse = hsmouse
-        self.ahk = hssetting.ahk
-        self.win = hssetting.win
-        self.hsmatch = HSTemplateMatch(self.hssetting.resolution)
-        self.hscontonur = HSContonurMatch(self.hssetting.resolution)        
-
-    def click_right_blank(self):
-        self.hsmouse.click(self.win.width - 150 , int(self.win.height * 2 / 3 ),x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 0.5)
-
-
+        super(HSMapBot, self).__init__(hssetting,hsmouse)
+     
 
     def _move_action(self,move):
         self.hsmouse.click(move[0],move[1],random.randint(1,5),random.randint(1,5),sleep_time = 0.5)

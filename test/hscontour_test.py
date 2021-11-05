@@ -5,7 +5,7 @@ from hs_mercenaries_bot.hssetting import r19201080
 class Test_Countor():
 
     def test_list_allow_move_cards(self):
-        imgpath = 'test\\test_data\\6.png'
+        imgpath = 'test\\test_data\\a6.png'
         r19201080.debug = True
         hsc = HSContonurMatch(r19201080)
         locations = hsc.list_allow_move_cards(imgpath)
@@ -23,5 +23,20 @@ class Test_Countor():
         assert 1030<= locations[4][1] <= 1080
         assert 1030<= locations[5][1] <= 1080
 
-        
 
+
+    def test_list_bounties(self):
+        imgpath = 'test\\test_data\\b3.png'
+        r19201080.debug = True
+        hsc = HSContonurMatch(r19201080)
+        locations = hsc.list_bounties(imgpath)
+        assert len(locations) == 3
+
+
+    def test_list_mercenary_collections(self):
+        imgpath = 'test\\test_data\\m5.png'
+        r19201080.debug = True
+        hsc = HSContonurMatch(r19201080)
+        locations = hsc.list_mercenary_collections(imgpath)
+        assert len(locations) == 5
+        

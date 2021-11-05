@@ -82,12 +82,20 @@ class HSTemplateMatch:
             return [location ] 
         return [] 
 
-    def find_bounty_ok(self,imgpath):
+    def find_bounty_finish_ok(self,imgpath):
         img = cv2.imread(imgpath)
         location = self._feature_match(img,"ok",min_match_nums = 10, folder="templates/map" )[0]
         if location != []:
             return [location ] 
         return [] 
+
+    def find_bounty_start_choose(self,imgpath):
+        img = cv2.imread(imgpath)
+        location = self._feature_match(img,"choose",min_match_nums = 25, folder="templates/map" )[0]
+        if location != []:
+            return [location ] 
+        return [] 
+
 
     def find_battle_ready(self,imgpath):
         return self._right_side_button(imgpath,"ready",min_match_nums=10)[0]

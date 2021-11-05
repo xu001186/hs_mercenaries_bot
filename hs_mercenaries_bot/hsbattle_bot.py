@@ -3,31 +3,16 @@ import random
 import numpy as np
 from .hstemplate_match import HSTemplateMatch
 from .hscontour_match import HSContonurMatch
+from .hsbot import HSBot
 
-
-class HSBattleBot:
+class HSBattleBot(HSBot):
     def __init__(self,hssetting,hsmouse):
-        self.hssetting = hssetting
-        self.hsmouse = hsmouse
-        self.ahk = hssetting.ahk
-        self.win = hssetting.win
+        super(HSBattleBot, self).__init__(hssetting,hsmouse)
         self.battle_finished = False
-        self.hsmatch = HSTemplateMatch(self.hssetting.resolution)
-        self.hscontonur = HSContonurMatch(self.hssetting.resolution)        
-
+ 
     def _pickup_card(self,x,y,seq):
         self.ahk.mouse_move(x + random.randint(1,5)  , y + random.randint(1,5),speed=30)
         self.ahk.mouse_drag( int(self.win.width / 2) + self.hssetting.resolution.battle_drag_x_margin * (seq),  int(self.win.height / 2) , speed=40)
-
-    def click_left_blank(self):
-        self.hsmouse.click(self.hssetting.resolution.left_black_x_margin , int(self.win.height / 2) + 150,x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
-
-    def right_click_left_blank(self):
-        self.hsmouse.right_click(self.hssetting.resolution.left_black_x_margin , int(self.win.height / 2) + 150,x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
-
-
-    def move_left_blank(self):
-        self.ahk.mouse_move(self.hssetting.resolution.left_black_x_margin , int(self.win.height / 2) + 150,speed=30)
 
 
     def wait_battle_ready_or_played_action(self,max_retry_times):
@@ -150,7 +135,7 @@ class HSBattleBot:
         else:
             raise Exception("fail to click the done rewards")  
         time.sleep(5)
-        ok_location = self.hsmatch.find_bounty_ok(self.hssetting.screenshot())
+        ok_location = self.hsmatch.find_bounty_finish_ok(self.hssetting.screenshot())
         if ok_location != []:
             self.hsmouse.click(ok_location[0][0], ok_location[0][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
         else:
