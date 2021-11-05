@@ -1,4 +1,3 @@
-import cv2
 from ahk import AHK
 import mss
 
@@ -46,9 +45,6 @@ class HSSetting:
         self.ahk = AHK()
         self.win =self.ahk.win_get(title=CONSTANT.GAME_NAME)
         self.bring_game()
-        # self.ahk.show_info_traytip("Starting", "loading files", slient=False, blocking=True)
-        # self.ahk.show_info_traytip("started", "all files loaded successfully", slient=False, blocking=False)
-        
     
     def screenshot(self):
         filename = "{0}.png".format( datetime.now().strftime("%Y%m%d%H%M%S"))

@@ -1,9 +1,9 @@
-from hsbattle_bot import HSBattleBot
-from hsmap_bot import HSMapBot
-from hssetting import HSSetting
-from hsmouse_action import HSMouseActions
-from hssetting import r19201080
-from hstemplate_match import MAPACTIONS
+from hs_mercenaries_bot.hsbattle_bot import HSBattleBot
+from hs_mercenaries_bot.hsmap_bot import HSMapBot
+from hs_mercenaries_bot.hssetting import HSSetting
+from hs_mercenaries_bot.hsmouse_action import HSMouseActions
+from hs_mercenaries_bot.hssetting import r19201080
+from hs_mercenaries_bot.hstemplate_match import MAPACTIONS
 
 import time
 
