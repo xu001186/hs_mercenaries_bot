@@ -4,33 +4,64 @@ import time
 import random
 
 class HSBot:
-    def __init__(self,hssetting,hsmouse):
+    def __init__(self,hssetting):
         self.hssetting = hssetting
-        self.hsmouse = hsmouse
+
         self.ahk = hssetting.ahk
         self.win = hssetting.win
         self.hsmatch = HSTemplateMatch(self.hssetting.resolution)
         self.hscontonur = HSContonurMatch(self.hssetting.resolution)        
 
     def click_left_blank(self):
-        self.hsmouse.click(self.hssetting.resolution.left_black_x_margin , int(self.win.height / 2) + 150,x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
+        self.click(self.hssetting.resolution.left_black_x_margin , int(self.win.height / 2) + 150,x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
 
     def right_click_left_blank(self):
-        self.hsmouse.right_click(self.hssetting.resolution.left_black_x_margin , int(self.win.height / 2) + 150,x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
+        self.right_click(self.hssetting.resolution.left_black_x_margin , int(self.win.height / 2) + 150,x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
 
     def move_left_blank(self):
-        self.ahk.mouse_move(self.hssetting.resolution.left_black_x_margin , int(self.win.height / 2) + 150,speed=30)
+        self.ahk.mouse_move(self.hssetting.resolution.left_black_x_margin , int(self.win.height / 2) + 150,speed=10)
 
+    def move_bottm_blank(self):
+        self.ahk.mouse_move(0,self.hssetting.resolution.bottom_black_y_margin,speed=10,relative=True)
 
-    def retry_click(self, imgpath, action_call,max_rety ):
-        locations = action_call(imgpath)
-        retry = 1 
-        while (len(locations) == 0 and retry <= max_rety ):
-            self.click_left_blank()  
-            time.sleep(3)
-            locations = action_call(imgpath)
-            print("retry to find the %s  %s  " % (action_call.__name__,retry))
+    def click(self , x,y, x_margin=0,y_margin=0 ,sleep_time = 0):
+        if sleep_time ==0:
+            sleep_time = random.randint(3,6)
+        move_speed = random.randint(10,20)
+        self.ahk.mouse_move(x + x_margin, y +y_margin, speed=move_speed) 
+        self.ahk.click()
+        time.sleep(sleep_time)
+
+    def right_click(self , x,y, x_margin=0,y_margin=0 ,sleep_time = 0):
+        if sleep_time ==0:
+            sleep_time = random.randint(3,6)
+        move_speed = random.randint(10,20)
+        self.ahk.mouse_move(x + x_margin, y +y_margin, speed=move_speed) 
+        self.ahk.right_click()
+        time.sleep(sleep_time)
+                
+
+    def retry_to_find_locations(self, location_calls,max_retry=10 ):
+        retry = 0
+        location = []
+        action_calls = location_calls
+        if not isinstance(action_calls,list):
+            action_calls = [location_calls]
+        while (len(location) == 0 and retry < max_retry):
+            if retry != 0:
+                self.click_left_blank()
+                time.sleep(3)
+                print("retry to find the %s  %s  " % (action_call.__name__,retry))
             retry +=1
-        if (retry >= max_rety):
-            raise Exception("Failed to call %s  " % (action_call.__name__))   
-        return locations  
+            for action_call in action_calls:
+                location = (action_call(self.hssetting.screenshot()))
+                if (len(location) == 0 and retry <= max_retry ):
+                    continue
+                else:
+                    if isinstance(location_calls,list): 
+                        return location  , action_call.__name__
+                    return location
+
+        raise Exception("Failed to call %s  " % (action_call.__name__))   
+
+

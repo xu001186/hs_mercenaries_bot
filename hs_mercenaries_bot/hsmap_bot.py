@@ -4,17 +4,17 @@ from .hstemplate_match import MAPACTIONS
 from .hsbot import HSBot
 
 class HSMapBot(HSBot):
-    def __init__(self,hssetting,hsmouse):
-        super(HSMapBot, self).__init__(hssetting,hsmouse)
+    def __init__(self,hssetting):
+        super(HSMapBot, self).__init__(hssetting)
      
 
     def _move_action(self,move):
-        self.hsmouse.click(move[0],move[1],random.randint(1,5),random.randint(1,5),sleep_time = 0.5)
+        self.click(move[0],move[1],random.randint(1,5),random.randint(1,5),sleep_time = 0.5)
         self.click_right_blank()
         location , action = self.hsmatch.find_map_action(self.hssetting.screenshot())
         if (location != []):
             print("noraml actions %s" % action)    
-            self.hsmouse.click(location[0][0],location[0][1],random.randint(1,5),random.randint(1,5),sleep_time = 0.5)
+            self.click(location[0][0],location[0][1],random.randint(1,5),random.randint(1,5),sleep_time = 0.5)
                 # leave the play to battle bot
             if action == MAPACTIONS.reveal:
                 self.reveal()
@@ -57,10 +57,10 @@ class HSMapBot(HSBot):
         print("start visit")            
         visitor_locations = self.hsmatch.find_vistors(self.hssetting.screenshot())
         if visitor_locations != []:
-            self.hsmouse.click(visitor_locations[0][0], visitor_locations[0][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
+            self.click(visitor_locations[0][0], visitor_locations[0][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
             visitor_choose = self.hsmatch.find_vistor_choose(self.hssetting.screenshot())
             if visitor_choose != []:
-                self.hsmouse.click(visitor_choose[0][0], visitor_choose[0][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
+                self.click(visitor_choose[0][0], visitor_choose[0][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
             else:
                 raise Exception("fail to find the visitor choose button")    
         else:

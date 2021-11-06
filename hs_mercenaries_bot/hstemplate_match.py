@@ -96,6 +96,27 @@ class HSTemplateMatch:
             return [location ] 
         return [] 
 
+    def is_party_start(self,imgpath):
+        img = cv2.imread(imgpath)
+        location = self._feature_match(img,"is_party",min_match_nums = 40, folder="templates/map" )[0]
+        if location != []:
+            return [location ] 
+        return [] 
+
+    def is_bounty(self,imgpath):
+        img = cv2.imread(imgpath)
+        location = self._feature_match(img,"boss_info",min_match_nums = 40, folder="templates/map" )[0]
+        if location != []:
+            return [location ] 
+        return [] 
+
+
+    def find_lock_in(self,imgpath):
+        img = cv2.imread(imgpath)
+        location = self._feature_match(img,"lock_in",min_match_nums = 13, folder="templates/map" )[0]
+        if location != []:
+            return [location ] 
+        return [] 
 
     def find_battle_ready(self,imgpath):
         return self._right_side_button(imgpath,"ready",min_match_nums=10)[0]
@@ -159,6 +180,9 @@ class HSTemplateMatch:
         query = cv2.imread( query_path ,  cv2.IMREAD_GRAYSCALE)  
         kp1, des1 = sift.detectAndCompute(query,None)
         kp2, des2 = sift.detectAndCompute(train,None)
+        if kp1 == () or kp2 == ():
+            print("Err - good %s for action %s , less than threshold %s" % (0,action,min_match_nums))
+            return [],0
         bf = cv2.BFMatcher()
         matches = bf.knnMatch(des1,des2, k=2) 
         good = []

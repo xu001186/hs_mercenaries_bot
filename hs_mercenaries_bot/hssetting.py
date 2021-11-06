@@ -3,9 +3,7 @@ import mss
 
 
 class CONSTANT:
-    MODE_NORMAL = "normal"
-    MODE_HEROIC = "heroic"
-    GAME_NAME  = 'Hearthstone'
+    GAME_NAME = "Hearthstone"
 
 #magic numbers for the different resolutions
 class r19201080:
@@ -22,13 +20,12 @@ class r19201080:
     allow_spell_card_x_margin = -40
     allow_spell_card_y_margin = 60
     
-
-    
     #battle drag
     battle_drag_x_margin = 130
 
-    #left blank click
+
     left_black_x_margin =70
+    bottom_black_y_margin = 200
 
     #map scoll up 
     up_y_margin = 100
