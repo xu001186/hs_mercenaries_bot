@@ -61,5 +61,4 @@ class Test_Countor():
         r19201080.debug = True
         hsc = HSContonurMatch(r19201080)
         locations = hsc.list_card_spells(imgpath)
-        assert len(locations) == 1
-
+        assert len(locations) == 2
