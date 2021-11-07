@@ -57,8 +57,13 @@ class HSTemplateMatch:
         return anchor_locations        
 
     def find_treasure_take(self,imgpath):
-        return self._three_choose_one_actions(imgpath,"take")
-        
+        take =  self._three_choose_one_actions(imgpath,"take")
+        keep = self._three_choose_one_actions(imgpath,"keep")
+        if (take != []):
+            return take
+        if (keep != []):
+            return keep
+
     def find_vistor_choose(self,imgpath):
         return self._three_choose_one_actions(imgpath,"choose")
 
@@ -118,10 +123,24 @@ class HSTemplateMatch:
             return [location ] 
         return [] 
 
+
+    def is_gold_reward(self,imgpath):
+        img = cv2.imread(imgpath)
+        location = self._feature_match(img,"reward",min_match_nums = 30, folder="templates/ignore" )[0]
+        if location != []:
+            return [location ] 
+        return [] 
+
     def find_battle_ready(self,imgpath):
+        location = self.is_gold_reward(imgpath)
+        if location != []:
+            return []
         return self._right_side_button(imgpath,"ready",min_match_nums=10)[0]
 
     def find_battle_played(self,imgpath):
+        location = self.is_gold_reward(imgpath)
+        if location != []:
+            return []        
         return self._right_side_button(imgpath,"played",min_match_nums=10)[0]
 
     def find_battle_ready_or_played(self,imgpath):
@@ -132,6 +151,10 @@ class HSTemplateMatch:
 
     def find_map_scoll(self,imgpath):
         return self._right_side_button(imgpath,"scoll","map",10)[0]
+
+    def find_map_play(self,imgpath):
+        return self._right_side_button(imgpath,MAPACTIONS.play,"map",30)[0]
+
 
     def find_map_action(self,imgpath,max_good_points= 50 ):
         play,play_nums = self._right_side_button(imgpath,MAPACTIONS.play,"map")
@@ -176,37 +199,40 @@ class HSTemplateMatch:
     def _feature_match(self,img,action,min_match_nums= 15, folder="templates"):
         train =  img
         sift = cv2.SIFT_create()
-        query_path = os.path.join("files/", "{0}/{1}/{2}.png".format(self.resolution.path,folder,action) )
-        query = cv2.imread( query_path ,  cv2.IMREAD_GRAYSCALE)  
-        kp1, des1 = sift.detectAndCompute(query,None)
-        kp2, des2 = sift.detectAndCompute(train,None)
-        if kp1 == () or kp2 == ():
-            print("Err - good %s for action %s , less than threshold %s" % (0,action,min_match_nums))
+        try:
+            query_path = os.path.join("files/", "{0}/{1}/{2}.png".format(self.resolution.path,folder,action) )
+            query = cv2.imread( query_path ,  cv2.IMREAD_GRAYSCALE)  
+            kp1, des1 = sift.detectAndCompute(query,None)
+            kp2, des2 = sift.detectAndCompute(train,None)
+            if kp1 == () or kp2 == ():
+                # print("Err - good %s for action %s , less than threshold %s" % (0,action,min_match_nums))
+                return [],0
+            bf = cv2.BFMatcher()
+            matches = bf.knnMatch(des1,des2, k=2) 
+            good = []
+            ratio  = 0.7
+            for m,n in matches:
+                if m.distance < ratio *n.distance:
+                    good.append([m])
+
+            if self.debug:
+                img_match = np.empty(( img.shape[0] + 100, query.shape[1] + img.shape[1], 3), dtype=np.uint8)
+                img_debug = cv2.drawMatchesKnn(query,kp1,img,kp2,good,flags=2,outImg=img_match)
+                self.debug_img(action,img_debug)
+
+            if len(good) <= min_match_nums:
+                # print("Err - good %s for action %s , less than threshold %s" % (len(good),action,min_match_nums))
+                return [] , len(good)
+            else:
+                print(" good %s for action %s" % (len(good),action))
+            pts2 = np.float32([kp2[m[0].trainIdx].pt for m in good])
+            x,y = np.mean(pts2, axis=0)
+            
+
+            return [int(x),int(y)] ,len(good)
+        except Exception as e:
+            print(e)
             return [],0
-        bf = cv2.BFMatcher()
-        matches = bf.knnMatch(des1,des2, k=2) 
-        good = []
-        ratio  = 0.7
-        for m,n in matches:
-            if m.distance < ratio *n.distance:
-                good.append([m])
-
-        if self.debug:
-            img_match = np.empty(( img.shape[0] + 100, query.shape[1] + img.shape[1], 3), dtype=np.uint8)
-            img_debug = cv2.drawMatchesKnn(query,kp1,img,kp2,good,flags=2,outImg=img_match)
-            self.debug_img(action,img_debug)
-
-        if len(good) <= min_match_nums:
-            print("Err - good %s for action %s , less than threshold %s" % (len(good),action,min_match_nums))
-            return [] , len(good)
-        else:
-            print(" good %s for action %s" % (len(good),action))
-        pts2 = np.float32([kp2[m[0].trainIdx].pt for m in good])
-        x,y = np.mean(pts2, axis=0)
-        
-
-        return [int(x),int(y)] ,len(good)
-
 
     def debug_img(self,img_name,img,save_to="files/debug/"):
         if (self.debug):

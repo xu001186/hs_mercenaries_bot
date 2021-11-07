@@ -15,6 +15,9 @@ class HSBot:
     def click_left_blank(self):
         self.click(self.hssetting.resolution.left_black_x_margin , int(self.win.height / 2) + 150,x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
 
+    def click_right_blank(self):
+        self.click(self.win.width - 150 , int(self.win.height * 2 / 3 ),x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 0.5)
+
     def right_click_left_blank(self):
         self.right_click(self.hssetting.resolution.left_black_x_margin , int(self.win.height / 2) + 150,x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
 
@@ -42,6 +45,7 @@ class HSBot:
                 
 
     def retry_to_find_locations(self, location_calls,max_retry=10 ):
+        max_retry = 20
         retry = 0
         location = []
         action_calls = location_calls

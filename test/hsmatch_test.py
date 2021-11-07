@@ -32,7 +32,3 @@ class Test_Template():
         assert len(locations) == 0
 
 
-t = Test_Template()
-t.test_is_treasure()
-      
-

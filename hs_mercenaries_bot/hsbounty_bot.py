@@ -45,19 +45,14 @@ class HSBountyBot(HSBot):
             raise Exception("can't find the choose button for mercenary  " )
         self.click(start_loc[0][0],start_loc[0][1],random.randint(1,5),random.randint(1,5),sleep_time = 0.5)
         time.sleep(2)
-        button_location , next_step_action = self.retry_to_find_locations([self.hsmatch.find_lock_in , self.hsmatch.find_battle_played] ,10)
+        button_location , next_step_action = self.retry_to_find_locations([self.hsmatch.find_lock_in , self.hsmatch.find_map_play] ,10)
         if next_step_action == "find_lock_in":
             self.click(button_location[0][0],button_location[0][1],random.randint(1,5),random.randint(1,5),sleep_time = 0.5)
             time.sleep(5)
-            self.retry_to_find_locations(self.hsmatch.find_battle_played ,10) # wait for the play comes out
+            self.retry_to_find_locations(self.hsmatch.find_map_play ,10) # wait for the play comes out
             
-        if next_step_action == "find_battle_played":
-            self.click(button_location[0][0],button_location[0][1],random.randint(1,5),random.randint(1,5),sleep_time = 0.5)
+        if next_step_action == "find_map_play":
+            print("let the map bot to handle")
+            # self.click(button_location[0][0],button_location[0][1],random.randint(1,5),random.randint(1,5),sleep_time = 0.5)
             time.sleep(5)
-
-
-
-        
-        
-      
     

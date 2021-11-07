@@ -48,7 +48,18 @@ class Test_Countor():
         hsc = HSContonurMatch(r19201080)
         locations = hsc.list_mercenary_collections(imgpath)
         assert len(locations) == 5
-        
-t = Test_Countor()
 
-t.test_list_allow_spell_cards()
+    def test_list_map_moves(self):
+        imgpath = 'test\\test_data\\test_list_map_moves.png'
+        r19201080.debug = True
+        hsc = HSContonurMatch(r19201080)
+        locations = hsc.list_map_moves(imgpath)
+        assert len(locations) == 1
+
+    def test_list_spell(self):
+        imgpath = 'test\\test_data\\list_spell.png'
+        r19201080.debug = True
+        hsc = HSContonurMatch(r19201080)
+        locations = hsc.list_card_spells(imgpath)
+        assert len(locations) == 1
+

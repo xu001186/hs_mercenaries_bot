@@ -19,7 +19,7 @@ class HSBattleBot(HSBot):
         self.click_left_blank() 
         cards_move = np.sort(cards_move)
         for seq in range(len(cards_move)):
-            locations = self.retry_to_find_locations(self.hscontonur.list_allow_move_cards ,5) 
+            locations = self.retry_to_find_locations(self.hscontonur.list_allow_move_cards ,10) 
             if locations != []:
                 card_position = locations[ cards_move[seq] - seq -1 ]
                 self._pickup_card(card_position[0], card_position[1],seq)
@@ -52,11 +52,12 @@ class HSBattleBot(HSBot):
             self.click(cards_locations[seq][0], cards_locations[seq][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5) , sleep_time = 1) # click the card
             self.move_bottm_blank()
             spell_locations = self.hscontonur.list_card_spells(self.hssetting.screenshot()) # get spell
-            if len(spell_locations) != None: 
+            if spell_locations != []: 
                 spell_set = spells[ (round_nums-1) % len(spells) ]
                 spell_choose = spell_set[seq] - 1
                 if (len(spell_locations)) <= spell_choose:
                     spell_choose = len(spell_locations) - 1
+                print(spell_choose,len(spell_locations))
                 self.click(spell_locations[spell_choose][0], spell_locations[spell_choose][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 0.5) # move to spell and click
                 self.click(minions_locations[0][0], minions_locations[0][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 0.5) # move to first minion and click
         

@@ -207,7 +207,7 @@ class HSContonurMatch:
         return locations
 
     def list_card_spells(self,imgpath):
-        return self._hsv_contour(imgpath,(40,130,255),(90,255,255),300,1000,0,30)
+        return self._hsv_contour(imgpath,(40,130,255),(90,255,255),300,1000,0,30,kernal=[13,13])
 
     def list_rewards(self,imgpath):
         return self._hsv_contour(imgpath,(90,110,130),(179,255,255),100,800)
@@ -241,10 +241,9 @@ class HSContonurMatch:
         return locations
 
 
-
+    #Todo - incomplete
     def is_spell_target(self,imgpath):
         img = cv2.imread(imgpath)
-        
         # img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)  
         red_mask = cv2.inRange(img,(0,0,190),(30,30,255))
         kernel = np.ones((11, 11), 'uint8')
@@ -274,6 +273,7 @@ class HSContonurMatch:
         return locations
 
 
+    #Todo - make it more accurate 
     def list_map_moves(self,imgpath):
         img = cv2.imread(imgpath)
         cropped_img = HSContonurMatch.crop_img(img,0,7/24,0,1/10)    

@@ -1,6 +1,6 @@
 from ahk import AHK
-import mss
 
+import pyautogui
 
 class CONSTANT:
     GAME_NAME = "Hearthstone"
@@ -35,19 +35,22 @@ class r19201080:
 from datetime import datetime
 class HSSetting:
   
-    def __init__(self, monitor , resolution):
+    def __init__(self,  resolution):
         self.resolution = resolution
         self.possibility = 0.6
-        self.monitor = monitor
+        self.screenshot_id = 1
         self.ahk = AHK()
         self.win =self.ahk.win_get(title=CONSTANT.GAME_NAME)
         self.bring_game()
     
     def screenshot(self):
-        filename = "{0}.png".format( datetime.now().strftime("%Y%m%d%H%M%S"))
+        #filename = "{0}.png".format( datetime.now().strftime("%Y%m%d%H%M%S"))
+        id = int(self.screenshot_id % 50)
+        filename = "screenshot_%s.png" % id
         imgpath = 'files/debug/' + filename
-        sct = mss.mss()
-        sct.shot(mon=self.monitor, output=imgpath)
+        pyautogui.screenshot(imgpath)
+        print(datetime.now().strftime("%Y%m%d%H%M%S"))
+        self.screenshot_id +=1
         return imgpath
 
     def bring_game(self):
