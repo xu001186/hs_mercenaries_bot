@@ -21,7 +21,7 @@ class r19201080:
     allow_spell_card_y_margin = 60
     
     #battle drag
-    battle_drag_x_margin = 130
+    battle_drag_x_margin = 160
 
 
     left_black_x_margin =70
@@ -49,7 +49,7 @@ class HSSetting:
         filename = "screenshot_%s.png" % id
         imgpath = 'files/debug/' + filename
         pyautogui.screenshot(imgpath)
-        print(datetime.now().strftime("%Y%m%d%H%M%S"))
+        self.debug_msg("Screenshot %s" % (id))
         self.screenshot_id +=1
         return imgpath
 
@@ -60,6 +60,11 @@ class HSSetting:
         self.win.to_top()      
         self.win.activate()
     
+    def debug_msg(self,msg,ci=None):
+        if ci == None:
+            print("%s - [None]: %s" % (datetime.now().strftime("%Y%m%d-%H:%M:%S") , msg))
+        else:
+            print("%s - [%s] : %s" % (datetime.now().strftime("%Y%m%d-%H:%M:%S"),ci.__class__.__name__,msg))
 
 
 

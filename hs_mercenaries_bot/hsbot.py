@@ -44,7 +44,7 @@ class HSBot:
         time.sleep(sleep_time)
                 
 
-    def retry_to_find_locations(self, location_calls,max_retry=10 ):
+    def retry_to_find_locations(self, location_calls,max_retry=10 ,err_if_not_found = True ):
         max_retry = 20
         retry = 0
         location = []
@@ -65,7 +65,10 @@ class HSBot:
                     if isinstance(location_calls,list): 
                         return location  , action_call.__name__
                     return location
-
-        raise Exception("Failed to call %s  " % (action_call.__name__))   
-
+        if err_if_not_found:
+            raise Exception("Failed to call %s  " % (action_call.__name__))   
+        else:
+            if isinstance(location_calls,list): 
+                return location  , action_call.__name__
+            return location
 

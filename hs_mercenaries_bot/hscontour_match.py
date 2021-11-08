@@ -103,10 +103,11 @@ class HSContonurMatch:
         for contour in contours:
             area = cv2.contourArea(contour)
             arcLength = cv2.arcLength(contour, False)
-            if (( arcLength >= 500) and (area >= 1000)):
+            if (( arcLength >= 500) and (area >= 3000)):
                 extTop = tuple(contour[contour[:, :, 1].argmin()][0])
                 extBot = tuple(contour[contour[:, :, 1].argmax()][0])                    
                 if  (h *1 / 2 < extTop[1] <=h*3 /4 ): # the cards position
+                    
                     cards_locations.append([extTop[0] - 50 + int(w*left_x_cut_pect) , extTop[1] + 100])                    
                 if  (h *1 / 4 <= extBot[1] <=h*1 /2 ): # the minions position
                     minion_locations.append([extBot[0] + int(w*left_x_cut_pect) ,extBot[1] - 100])
@@ -209,8 +210,14 @@ class HSContonurMatch:
     def list_card_spells(self,imgpath):
         return self._hsv_contour(imgpath,(40,130,255),(90,255,255),300,1000,0,30,kernal=[13,13])
 
+    def find_battle_green_ready(self,imgpath):
+        return self._hsv_contour(imgpath,(40,130,255),(90,255,255),300,1000,0,30,kernal=[13,13])
+
+
     def list_rewards(self,imgpath):
         return self._hsv_contour(imgpath,(90,110,130),(179,255,255),100,800)
+
+
 
     def _hsv_contour(self,imgpath,min_hsv ,max_hsv,min_arcLength ,min_area,  cx_margin=0,cy_margin=0, kernal=[5,5]):
         img = cv2.imread(imgpath)
@@ -257,7 +264,7 @@ class HSContonurMatch:
             arcLength = cv2.arcLength(contour, False)
                                                                  
             if ((  arcLength >= 200) and (  area >= 200) ):
-                print(arcLength,area)
+                
                 M = cv2.moments(contour)
                 if M['m00'] != 0.0:
                     cx = int(M['m10']/M['m00'])
@@ -309,7 +316,6 @@ class HSContonurMatch:
         if (self.debug):
             filename = "{0}_{1}.png".format(img_name, datetime.now().strftime("%Y%m%d%H%M%S"))
             img_path = os.path.join(save_to, filename)
-            print(img_path)
             cv2.imwrite(img_path,img)
 
 

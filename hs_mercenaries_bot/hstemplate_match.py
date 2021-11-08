@@ -220,11 +220,11 @@ class HSTemplateMatch:
                 img_debug = cv2.drawMatchesKnn(query,kp1,img,kp2,good,flags=2,outImg=img_match)
                 self.debug_img(action,img_debug)
 
-            if len(good) <= min_match_nums:
+            if len(good) < min_match_nums:
                 # print("Err - good %s for action %s , less than threshold %s" % (len(good),action,min_match_nums))
                 return [] , len(good)
-            else:
-                print(" good %s for action %s" % (len(good),action))
+            # else:
+            #     print(" good %s for action %s" % (len(good),action))
             pts2 = np.float32([kp2[m[0].trainIdx].pt for m in good])
             x,y = np.mean(pts2, axis=0)
             
@@ -238,7 +238,6 @@ class HSTemplateMatch:
         if (self.debug):
             filename = "{0}_{1}.png".format( datetime.now().strftime("%Y%m%d%H%M%S"),img_name)
             img_path = os.path.join(save_to, filename)
-            print(img_path)
             cv2.imwrite(img_path,img)
 
 

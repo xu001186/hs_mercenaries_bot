@@ -13,7 +13,7 @@ class HSMapBot(HSBot):
         self.click_right_blank()
         location , action = self.hsmatch.find_map_action(self.hssetting.screenshot())
         if (location != []):
-            print("noraml actions %s" % action)    
+            self.hssetting.debug_msg("noraml actions %s" % action , self)    
             self.click(location[0][0],location[0][1],random.randint(1,5),random.randint(1,5),sleep_time = 0.5)
                 # leave the play to battle bot
             if action == MAPACTIONS.reveal:
@@ -32,29 +32,28 @@ class HSMapBot(HSBot):
         action = None
         mysterious_location  = self.hsmatch.find_mysterious(imgpath)
         if mysterious_location != []:
-            print("mysterious action")
+            self.hssetting.debug_msg("mysterious action",self)
             action = self._move_action(mysterious_location)
-        if action ==None:
+        if action == None:
             moves = self.hscontonur.list_map_moves(imgpath)
             for move in moves:
-                print("noraml actions")
                 action = self._move_action(move)
                 if action != None:
                     return action
         return action
 
     def reveal(self):
-        print("start reveal")
+        self.hssetting.debug_msg("start reveal",self)
 
     def pickup(self):
-        print("start pickup")  
+        self.hssetting.debug_msg("start pickup",self)
 
     def warp(self):
-        print("start warp")  
+        self.hssetting.debug_msg("start warp",self)
 
 
     def visit(self):
-        print("start visit")            
+        self.hssetting.debug_msg("start visit",self)            
         visitor_locations = self.hsmatch.find_vistors(self.hssetting.screenshot())
         if visitor_locations != []:
             self.click(visitor_locations[0][0], visitor_locations[0][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
@@ -64,4 +63,4 @@ class HSMapBot(HSBot):
             else:
                 raise Exception("fail to find the visitor choose button")    
         else:
-            print("not mystery ")
+            self.hssetting.debug_msg("not mystery ",self)

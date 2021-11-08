@@ -15,17 +15,19 @@ mercenaries = [1,2,3]
 spells = [[1,1,1],[3,2,2]]
 bounty_no = 1
 mercenary_collection = 1
-bounty.start(bounty_no,mercenary_collection)
+# bounty.start(bounty_no,mercenary_collection)
+times = 1
 while True:
     time.sleep(1)
     action = map.move()
     if action == MAPACTIONS.play:
-        print("start battle")
+        hs.debug_msg("start battle")
         battle.battle_prepare(mercenaries)
-        print("start round")
+        hs.debug_msg("start round")
         battle.start_round(1, spells =spells )
         if battle.battle_finished:
             battle.battle_finished = False
+            hs.debug_msg("it's end,start next turn %s" % times)
+            times +=1
             bounty.start(bounty_no,mercenary_collection)
-            print("it's end,start next turn")
 
