@@ -66,7 +66,7 @@ The bot numbers the mercenary collections , bountry , mercenaries and spells for
  4) Auto find the path to mysterious
 
 # Update History
-## Update 2021/11/7.
+## Update 2021/11/9.
 - Fix bugs
 - Update list_allow_move_cards
 - Update _hsv_contour
