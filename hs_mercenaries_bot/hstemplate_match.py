@@ -65,7 +65,7 @@ class HSTemplateMatch:
             return keep
 
     def find_vistor_choose(self,imgpath):
-        return self._three_choose_one_actions(imgpath,"choose")
+        return self._three_choose_one_actions(imgpath,"vistor_choose")
 
     def _three_choose_one_actions(self,imgpath,type):
         left_x_cut_pect = 0
@@ -215,6 +215,7 @@ class HSTemplateMatch:
                 if m.distance < ratio *n.distance:
                     good.append([m])
 
+
             if self.debug:
                 img_match = np.empty(( img.shape[0] + 100, query.shape[1] + img.shape[1], 3), dtype=np.uint8)
                 img_debug = cv2.drawMatchesKnn(query,kp1,img,kp2,good,flags=2,outImg=img_match)
@@ -225,6 +226,7 @@ class HSTemplateMatch:
                 return [] , len(good)
             # else:
             #     print(" good %s for action %s" % (len(good),action))
+
             pts2 = np.float32([kp2[m[0].trainIdx].pt for m in good])
             x,y = np.mean(pts2, axis=0)
             

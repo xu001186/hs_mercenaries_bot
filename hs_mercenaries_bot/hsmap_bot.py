@@ -53,8 +53,9 @@ class HSMapBot(HSBot):
 
 
     def visit(self):
-        self.hssetting.debug_msg("start visit",self)            
-        visitor_locations = self.hsmatch.find_vistors(self.hssetting.screenshot())
+        self.hssetting.debug_msg("start visit",self)  
+        visitor_locations = self.retry_to_find_locations(self.hsmatch.find_vistors , max_retry= 5, err_if_not_found = False)          
+        # visitor_locations = self.hsmatch.find_vistors(self.hssetting.screenshot())
         if visitor_locations != []:
             self.click(visitor_locations[0][0], visitor_locations[0][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
             visitor_choose = self.hsmatch.find_vistor_choose(self.hssetting.screenshot())

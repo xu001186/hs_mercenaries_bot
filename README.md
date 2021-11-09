@@ -58,13 +58,21 @@ The bot numbers the mercenary collections , bountry , mercenaries and spells for
 - The bot will stops working if the any of mercenary is died. 
 
 
+
 # Todo:
- 1) Pickup the "allow minion move" from power.log to get card names.
+ 1) Pickup the "allow minion move" from power.log to get card names. ( None)
  2) Once the rewards are collected , re-choose the boss and start over . (Done)
  3) Refine the battle spell choose.
-
+ 4) Auto find the path to mysterious
 
 # Update History
+## Update 2021/11/7.
+- Fix bugs
+- Update list_allow_move_cards
+- Update _hsv_contour
+- Release alpha version
+
+
 ## Update 2021/11/7.
 - Fix bugs
 - Release alpha version

@@ -13,29 +13,27 @@ class r19201080:
     treasure_y_margin = 200
 
     # allow move card margin
-    allow_move_card_x_margin = 20
-    allow_move_card_y_margin = -2
+    allow_move_card_y_margin = -30
 
     # _allow_spell_cards margin
     allow_spell_card_x_margin = -40
     allow_spell_card_y_margin = 60
     
     #battle drag
-    battle_drag_x_margin = 160
-
+    battle_drag_x_margin = 140
 
     left_black_x_margin =70
     bottom_black_y_margin = 200
 
-    #map scoll up 
-    up_y_margin = 100
-
     path="1920x1080"
 
 from datetime import datetime
+import logging
+
 class HSSetting:
   
     def __init__(self,  resolution):
+        logging.basicConfig(filename='hs_bot.log', level=logging.INFO)
         self.resolution = resolution
         self.possibility = 0.6
         self.screenshot_id = 1
@@ -62,9 +60,9 @@ class HSSetting:
     
     def debug_msg(self,msg,ci=None):
         if ci == None:
-            print("%s - [None]: %s" % (datetime.now().strftime("%Y%m%d-%H:%M:%S") , msg))
+            logging.info("%s - [None]: %s" % (datetime.now().strftime("%Y%m%d-%H:%M:%S") , msg))
         else:
-            print("%s - [%s] : %s" % (datetime.now().strftime("%Y%m%d-%H:%M:%S"),ci.__class__.__name__,msg))
+            logging.info("%s - [%s] : %s" % (datetime.now().strftime("%Y%m%d-%H:%M:%S"),ci.__class__.__name__,msg))
 
 
 

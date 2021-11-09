@@ -44,8 +44,8 @@ class HSBot:
         time.sleep(sleep_time)
                 
 
-    def retry_to_find_locations(self, location_calls,max_retry=10 ,err_if_not_found = True ):
-        max_retry = 20
+    def retry_to_find_locations(self, location_calls,max_retry=20 ,err_if_not_found = True ):
+      
         retry = 0
         location = []
         action_calls = location_calls
@@ -55,7 +55,7 @@ class HSBot:
             if retry != 0:
                 self.click_left_blank()
                 time.sleep(3)
-                print("retry to find the %s  %s  " % (action_call.__name__,retry))
+                self.hssetting.debug_msg("retry to find the %s  %s  " % (action_call.__name__,retry))
             retry +=1
             for action_call in action_calls:
                 location = (action_call(self.hssetting.screenshot()))

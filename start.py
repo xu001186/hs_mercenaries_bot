@@ -11,11 +11,12 @@ hs = HSSetting(r19201080)
 battle = HSBattleBot(hs)
 map = HSMapBot(hs)
 bounty = HSBountyBot(hs)
-mercenaries = [1,2,3]
-spells = [[1,1,1],[3,2,2]]
-bounty_no = 1
-mercenary_collection = 1
-# bounty.start(bounty_no,mercenary_collection)
+mercenaries = [1,3,4]
+spells = [[1,1,1],[3,3,2]]
+bounty_no = 5
+mercenary_collection = 3
+
+bounty.start(bounty_no,mercenary_collection)
 times = 1
 while True:
     time.sleep(1)

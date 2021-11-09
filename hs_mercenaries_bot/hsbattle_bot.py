@@ -3,14 +3,15 @@ import random
 import numpy as np
 from .hsbot import HSBot
 
+
 class HSBattleBot(HSBot):
     def __init__(self,hssetting):
         super(HSBattleBot, self).__init__(hssetting)
         self.battle_finished = False
  
     def _pickup_card(self,x,y,seq):
-        self.ahk.mouse_move(x + random.randint(1,5)  , y + random.randint(1,5),speed=10)
-        self.ahk.mouse_drag( int(self.win.width / 2) + self.hssetting.resolution.battle_drag_x_margin * (seq),  int(self.win.height / 2) , speed=10)
+        self.ahk.mouse_move(x , y ,speed=40)
+        self.ahk.mouse_drag( int(self.win.width / 2) + self.hssetting.resolution.battle_drag_x_margin * (seq),  int(self.win.height / 2) , speed=40)
 
 
 
@@ -23,7 +24,8 @@ class HSBattleBot(HSBot):
         for seq in range(len(cards_move)):
             locations = self.retry_to_find_locations(self.hscontonur.list_allow_move_cards ) 
             if locations != []:
-                card_position = locations[ cards_move[seq] - seq -1 ]
+                card_position = locations[ cards_move[seq] - seq - 1 ]
+                self.hssetting.debug_msg("Card moves nums %s , the seq is %s,location is %s " % (len(locations), seq,card_position) ,self)
                 self._pickup_card(card_position[0], card_position[1],seq)
                 time.sleep(3)
             # else:
@@ -70,8 +72,9 @@ class HSBattleBot(HSBot):
             else:
                 all_spell_found = False
         self.hssetting.debug_msg("Start to find the ready_location",self)
-        if all_spell_found:
-            ready_location = self.retry_to_find_locations(self.hscontonur.find_battle_green_ready,err_if_not_found=False) 
+        ##Todo: refine
+        if all_spell_found and cards_nums == len(cards_locations):
+            ready_location = self.retry_to_find_locations(self.hscontonur.find_battle_green_ready,max_retry=5,err_if_not_found=False) 
             if ready_location == []:
                 ready_location = self.retry_to_find_locations(self.hsmatch.find_battle_ready_or_played) 
             self.click(ready_location[0][0], ready_location[0][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)

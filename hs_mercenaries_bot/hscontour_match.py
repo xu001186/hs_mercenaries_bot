@@ -57,10 +57,16 @@ class HSContonurMatch:
                     tmp_locations_a = np.array(tmp_locations)
                     max_point_row = np.where(  tmp_locations_a[:,1] == np.max(tmp_locations,axis=0)[1]) 
                     position = tmp_locations_a [max_point_row][0] 
-                    locations.append([position[0] + int(w*left_x_cut_pect) + self.resolution.allow_move_card_x_margin, position[1]+int(h*top_y_cut_pect) + self.resolution.allow_move_card_y_margin])
+                    locations.append([position[0] + int(w*left_x_cut_pect) , position[1]+int(h*top_y_cut_pect) + self.resolution.allow_move_card_y_margin])
                     tmp_locations = []
             tmp_locations.append([x,y])
-
+    
+        for idx in range(len(locations)):
+            if idx < len(locations) -1:
+                locations[idx][0] = locations[idx][0] + int((locations[idx+1][0] - locations[idx][0]) /3)
+            else:
+                locations[idx][0] = locations[idx][0] + 50
+ 
         if self.debug:
             self._debug_img_with_text(locations,img)
             self.debug_img("list_allow_move_cards",img)
@@ -208,18 +214,29 @@ class HSContonurMatch:
         return locations
 
     def list_card_spells(self,imgpath):
-        return self._hsv_contour(imgpath,(40,130,255),(90,255,255),300,1000,0,30,kernal=[13,13])
+        def position(w,h,cx,cy):
+            if h*2/5 < cy < h*3/5:
+                return True
+            return False 
+        return self._hsv_contour(imgpath,(40,130,255),(90,255,255),300,1000,0,30,kernal=[13,13],contour_position=position)
 
     def find_battle_green_ready(self,imgpath):
-        return self._hsv_contour(imgpath,(40,130,255),(90,255,255),300,1000,0,30,kernal=[13,13])
+        def position(w,h,cx,cy):
+            if w*3/5 < cx :
+                return True
+            return False 
+        return self._hsv_contour(imgpath,(40,130,255),(90,255,255),300,1000,0,30,kernal=[13,13],contour_position=position)
 
 
     def list_rewards(self,imgpath):
         return self._hsv_contour(imgpath,(90,110,130),(179,255,255),100,800)
 
-
-
-    def _hsv_contour(self,imgpath,min_hsv ,max_hsv,min_arcLength ,min_area,  cx_margin=0,cy_margin=0, kernal=[5,5]):
+    def _hsv_contour(self,imgpath,min_hsv ,max_hsv,min_arcLength ,min_area,  cx_margin=0,cy_margin=0, kernal=[5,5],contour_position=None):
+        def everywhere(w,h,cx,cy):
+            return True
+        if contour_position == None:
+            contour_position = everywhere
+        
         img = cv2.imread(imgpath)
         img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)  
         hs_mask = cv2.inRange(img_hsv,min_hsv,max_hsv)
@@ -228,6 +245,7 @@ class HSContonurMatch:
         self.debug_img("dilate_img_hsv_contour",dilate_img)
         contours, _ = cv2.findContours(dilate_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         locations = []
+        h, w = img.shape[:2]
         for contour in contours:
             arcLength = cv2.arcLength(contour, False) 
             area = cv2.contourArea(contour)
@@ -236,9 +254,10 @@ class HSContonurMatch:
                 if M['m00'] != 0.0:
                     cx = int(M['m10']/M['m00'])
                     cy = int(M['m01']/M['m00'])
-                    locations.append([cx + cx_margin,cy + cy_margin])
-                if self.debug:
-                    cv2.drawContours(img,[contour],0, (random.randint(0,256), random.randint(0,256), random.randint(0,256)),2  )
+                    if contour_position(w,h,cx,cy):
+                        locations.append([cx + cx_margin,cy + cy_margin])
+                        if self.debug:
+                            cv2.drawContours(img,[contour],0, (random.randint(0,256), random.randint(0,256), random.randint(0,256)),2  )
         locations = HSContonurMatch.sort_2d_array(locations)
         self.debug_img("dilate_img_hsv_contour_contour",img)
         locations = HSContonurMatch.sort_2d_array(locations)

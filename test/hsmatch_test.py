@@ -31,4 +31,9 @@ class Test_Template():
         locations = hsc.is_bounty(imgpath)
         assert len(locations) == 0
 
-
+    def test_find_choose(self):
+        imgpath = 'test\\test_data\\vistorchoose.png'
+        r19201080.debug = True
+        hsc = HSTemplateMatch(r19201080)
+        locations = hsc.find_vistor_choose(imgpath)
+        assert len(locations) == 1
