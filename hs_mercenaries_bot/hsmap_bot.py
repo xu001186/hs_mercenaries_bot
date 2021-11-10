@@ -6,7 +6,36 @@ from .hsbot import HSBot
 class HSMapBot(HSBot):
     def __init__(self,hssetting):
         super(HSMapBot, self).__init__(hssetting)
+        self.mysterious_loc = self.find_mysterious_position()
      
+    def find_mysterious_position(self):
+        ss = self.hssetting.screenshot() 
+        is_start = self.hsmatch.find_map_begin(ss)
+        if is_start == []:
+            return []
+        is_map_end = []
+        mysterious_loc = [] 
+        while is_map_end == [] and mysterious_loc == []:
+            ss = self.hssetting.screenshot()
+            mysterious_loc = self.hsmatch.find_mysterious_unreach(ss)
+            if mysterious_loc == []:
+                is_map_end = self.hsmatch.find_map_end(ss)
+                if is_map_end == []:
+                    locations = self.hsmatch.find_map_scoll(ss)
+                    if (locations != []):
+                        self.ahk.mouse_move(locations[0][0] , locations[0][1] , speed=30) 
+                        self.ahk.mouse_drag(locations[0][0],locations[0][1]-200,speed=35) 
+        is_map_begin = []
+        while is_map_begin == []:
+            ss = self.hssetting.screenshot()
+            is_map_begin = self.hsmatch.find_map_begin(ss)
+            if is_map_begin == []:
+                locations = self.hsmatch.find_map_scoll(ss)
+                if (locations != []):
+                    self.ahk.mouse_move(locations[0][0] , locations[0][1] , speed=30) 
+                    self.ahk.mouse_drag(locations[0][0],locations[0][1]+200,speed=35)   
+        return mysterious_loc
+  
 
     def _move_action(self,move):
         self.click(move[0],move[1],random.randint(1,5),random.randint(1,5),sleep_time = 0.5)

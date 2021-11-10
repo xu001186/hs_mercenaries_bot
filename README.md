@@ -63,7 +63,7 @@ The bot numbers the mercenary collections , bountry , mercenaries and spells for
  1) Pickup the "allow minion move" from power.log to get card names. ( None)
  2) Once the rewards are collected , re-choose the boss and start over . (Done)
  3) Refine the battle spell choose.
- 4) Auto find the path to mysterious
+ 4) Auto find the path to mysterious (WIP)
 
 # Update History
 
@@ -71,11 +71,14 @@ The bot numbers the mercenary collections , bountry , mercenaries and spells for
 - Fix bugs
 - Update find_mysterious
 - Update mysterious.PNG
+- Update map begin ,end and scoll templates
+- Add find_mysterious_position function to hsmap_bot
 
 ## Update 2021/11/9.
 - Fix bugs
 - Update list_allow_move_cards
 - Update _hsv_contour
+
 
 
 ## Update 2021/11/7.

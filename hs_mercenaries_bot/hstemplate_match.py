@@ -87,6 +87,14 @@ class HSTemplateMatch:
             return [location ] 
         return [] 
 
+
+    def find_mysterious_unreach(self,imgpath):
+        img = cv2.imread(imgpath)
+        location = self._feature_match(img,"mysterious_unreach",min_match_nums = 15, folder="templates/map" )[0]
+        if location != []:
+            return [location ] 
+        return [] 
+
     def find_bounty_finish_ok(self,imgpath):
         img = cv2.imread(imgpath)
         location = self._feature_match(img,"ok",min_match_nums = 10, folder="templates/map" )[0]
@@ -149,8 +157,22 @@ class HSTemplateMatch:
             return self.find_battle_played(imgpath)
         return ready
 
+    def find_map_end(self,imgpath):
+        img = cv2.imread(imgpath)
+        location = self._feature_match(img,"map_end",min_match_nums = 30, folder="templates/map" )[0]
+        if location != []:
+            return [location ] 
+        return [] 
+
+    def find_map_begin(self,imgpath):
+        img = cv2.imread(imgpath)
+        location = self._feature_match(img,"map_begin",min_match_nums = 15, folder="templates/map" )[0]
+        if location != []:
+            return [location ] 
+        return [] 
+
     def find_map_scoll(self,imgpath):
-        return self._right_side_button(imgpath,"scoll","map",10)[0]
+        return self._right_side_button(imgpath,"scoll","map",5)[0]
 
     def find_map_play(self,imgpath):
         return self._right_side_button(imgpath,MAPACTIONS.play,"map",30)[0]
