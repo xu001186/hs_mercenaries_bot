@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 from .hssetting import r19201080
 from .hscontour_match import HSContonurMatch
-
+import logging
 
 class MAPACTIONS:
     play = "play"
@@ -16,7 +16,7 @@ class HSTemplateMatch:
    
     def __init__(self,resolution=r19201080):
         self.resolution = resolution
-        self.debug = self.resolution.debug
+        self.debug = self.resolution.debug_img
 
 
     def find_reward(self,imgpath):
@@ -199,13 +199,14 @@ class HSTemplateMatch:
     def _feature_match(self,img,action,min_match_nums= 15, folder="templates"):
         train =  img
         sift = cv2.SIFT_create()
+
         try:
             query_path = os.path.join("files/", "{0}/{1}/{2}.png".format(self.resolution.path,folder,action) )
             query = cv2.imread( query_path ,  cv2.IMREAD_GRAYSCALE)  
             kp1, des1 = sift.detectAndCompute(query,None)
             kp2, des2 = sift.detectAndCompute(train,None)
             if kp1 == () or kp2 == ():
-                # print("Err - good %s for action %s , less than threshold %s" % (0,action,min_match_nums))
+                logging.debug("Err - good %s for action %s , less than threshold %s" % (0,action,min_match_nums))
                 return [],0
             bf = cv2.BFMatcher()
             matches = bf.knnMatch(des1,des2, k=2) 
@@ -222,15 +223,13 @@ class HSTemplateMatch:
                 self.debug_img(action,img_debug)
 
             if len(good) < min_match_nums:
-                # print("Err - good %s for action %s , less than threshold %s" % (len(good),action,min_match_nums))
+                logging.debug("Err - good %s for action %s , less than threshold %s" % (len(good),action,min_match_nums))
                 return [] , len(good)
-            # else:
-            #     print(" good %s for action %s" % (len(good),action))
+            else:
+                logging.debug(" good %s for action %s" % (len(good),action))
 
             pts2 = np.float32([kp2[m[0].trainIdx].pt for m in good])
             x,y = np.mean(pts2, axis=0)
-            
-
             return [int(x),int(y)] ,len(good)
         except Exception as e:
             print(e)

@@ -33,7 +33,7 @@ class HSMapBot(HSBot):
         mysterious_location  = self.hsmatch.find_mysterious(imgpath)
         if mysterious_location != []:
             self.hssetting.debug_msg("mysterious action",self)
-            action = self._move_action(mysterious_location)
+            action = self._move_action(mysterious_location[0])
         if action == None:
             moves = self.hscontonur.list_map_moves(imgpath)
             for move in moves:

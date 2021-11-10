@@ -7,7 +7,7 @@ class CONSTANT:
 
 #magic numbers for the different resolutions
 class r19201080:
-    debug = False
+    debug_img = False
     # pickup treasure and vistor margin
     treasure_x_margin = 300
     treasure_y_margin = 200
@@ -33,7 +33,7 @@ import logging
 class HSSetting:
   
     def __init__(self,  resolution):
-        logging.basicConfig(filename='hs_bot.log', level=logging.INFO)
+        logging.basicConfig(filename='files\\debug\\hs_bot.log', level=logging.INFO)
         self.resolution = resolution
         self.possibility = 0.6
         self.screenshot_id = 1

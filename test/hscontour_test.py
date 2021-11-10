@@ -2,7 +2,7 @@ from hs_mercenaries_bot.hscontour_match import HSContonurMatch
 from hs_mercenaries_bot.hssetting import r19201080
 
 
-class Test_Countor():
+class Test_Countor:
 
     def test_list_allow_move_cards(self):
         imgpath = 'test\\test_data\\test_list_allow_move_cards.png'
@@ -61,3 +61,5 @@ class Test_Countor():
         locations = hsc.find_battle_green_ready(imgpath)
         assert len(locations) == 1
 
+t = Test_Countor()
+t.test_list_map_moves()

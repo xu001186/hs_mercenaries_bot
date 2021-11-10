@@ -11,7 +11,7 @@ class HSContonurMatch:
 
     def __init__(self,resolution=r19201080):
         self.resolution = resolution
-        self.debug = self.resolution.debug
+        self.debug = self.resolution.debug_img
 
 
     def list_allow_move_cards(self,imgpath):
@@ -302,7 +302,7 @@ class HSContonurMatch:
     #Todo - make it more accurate 
     def list_map_moves(self,imgpath):
         img = cv2.imread(imgpath)
-        cropped_img = HSContonurMatch.crop_img(img,0,7/24,0,1/10)    
+        cropped_img = HSContonurMatch.crop_img(img,0,7/24,0,1/4)    
         img_hsv = cv2.cvtColor(cropped_img, cv2.COLOR_BGR2HSV)  
         gold_mask = cv2.inRange(img_hsv,(40,100,0),(179,255,255))
         kernel = np.ones((11, 11), 'uint8')
@@ -315,7 +315,7 @@ class HSContonurMatch:
             area = cv2.contourArea(contour)
             arcLength = cv2.arcLength(contour, False)
                                                                   # exclude the hexagon "view party"
-            if ((  arcLength >= 600) and (  area >= 1500) and len(approx) > 10):
+            if ((  arcLength >= 600) and (  area >= 10000) and len(approx) > 10):
                 M = cv2.moments(contour)
                 if M['m00'] != 0.0:
                     cx = int(M['m10']/M['m00'])

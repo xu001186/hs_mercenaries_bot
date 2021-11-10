@@ -40,7 +40,7 @@ class HSBattleBot(HSBot):
 
     def start_round(self,round_nums,spells):
         self.hssetting.debug_msg("Start to check the start round",self)
-        self.retry_to_find_locations(self.hsmatch.find_battle_ready ) #detect ready button to ensure it's the right place
+        self.retry_to_find_locations(self.hsmatch.find_battle_ready_or_played ) #detect ready button to ensure it's the right place
         self.hssetting.debug_msg("The start round is ready",self)
         self.click_left_blank()  
         self.hssetting.debug_msg("start round %s" % round_nums,self)

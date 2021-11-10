@@ -2,7 +2,7 @@ from hs_mercenaries_bot.hstemplate_match import HSTemplateMatch
 from hs_mercenaries_bot.hssetting import r19201080
 
 
-class Test_Template():
+class Test_Template:
 
     def test_find_bounty_start_choose(self):
         imgpath = 'test\\test_data\\test_list_bounties.png'
@@ -37,3 +37,11 @@ class Test_Template():
         hsc = HSTemplateMatch(r19201080)
         locations = hsc.find_vistor_choose(imgpath)
         assert len(locations) == 1
+
+    def test_find_mysterious(self):
+        imgpath = 'test\\test_data\\find_mysterious.png'
+        r19201080.debug = True
+        hsc = HSTemplateMatch(r19201080)
+        locations = hsc.find_mysterious(imgpath)
+        assert len(locations) == 1
+
