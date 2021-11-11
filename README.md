@@ -55,7 +55,7 @@ The bot numbers the mercenary collections , bountry , mercenaries and spells for
 - 1920 * 1080 FULL SCREEN
 
 # KNOWN ISSUE
-- The bot will stops working if the any of mercenary is died. 
+- 1 The bot will stops working if the any of mercenary is died.  (FIXED)
 
 
 
@@ -63,9 +63,14 @@ The bot numbers the mercenary collections , bountry , mercenaries and spells for
  1) Pickup the "allow minion move" from power.log to get card names. ( None)
  2) Once the rewards are collected , re-choose the boss and start over . (Done)
  3) Refine the battle spell choose.
- 4) Auto find the path to mysterious (WIP)
+ 4) Auto find the path to mysterious (DONE)
 
 # Update History
+
+## Update 2021/11/11.
+- Update HSBattleBot to fix the known issue 1)
+- Update HSMapBot to support the auto path to mysterious
+
 
 ## Update 2021/11/10.
 - Fix bugs

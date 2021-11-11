@@ -7,7 +7,7 @@ class Test_Countor:
     def test_list_allow_move_cards(self):
         imgpath = 'test\\test_data\\test_list_allow_move_cards.png'
 
-        r19201080.debug = True
+        r19201080.debug_img = True
         hsc = HSContonurMatch(r19201080)
         locations = hsc.list_allow_move_cards(imgpath)
         assert len(locations) == 6
@@ -15,7 +15,7 @@ class Test_Countor:
 
     def test_list_allow_spell_cards(self):
         imgpath = 'test\\test_data\\test_list_allow_spell_cards.png'
-        r19201080.debug = True
+        r19201080.debug_img = True
         hsc = HSContonurMatch(r19201080)
         locations = hsc.list_allow_spell_cards(imgpath)
         assert len(locations) == 2
@@ -26,7 +26,7 @@ class Test_Countor:
 
     def test_list_bounties(self):
         imgpath = 'test\\test_data\\test_list_bounties.png'
-        r19201080.debug = True
+        r19201080.debug_img = True
         hsc = HSContonurMatch(r19201080)
         locations = hsc.list_bounties(imgpath)
         assert len(locations) == 6
@@ -34,32 +34,36 @@ class Test_Countor:
 
     def test_list_mercenary_collections(self):
         imgpath = 'test\\test_data\\test_list_mercenary_collections.png'
-        r19201080.debug = True
+        r19201080.debug_img = True
         hsc = HSContonurMatch(r19201080)
         locations = hsc.list_mercenary_collections(imgpath)
         assert len(locations) == 5
 
     def test_list_map_moves(self):
         imgpath = 'test\\test_data\\test_list_map_moves.png'
-        r19201080.debug = True
+        r19201080.debug_img = True
         hsc = HSContonurMatch(r19201080)
         locations = hsc.list_map_moves(imgpath)
         assert len(locations) == 1
 
     def test_list_spell(self):
         imgpath = 'test\\test_data\\list_spell.png'
-        r19201080.debug = True
+        r19201080.debug_img = True
+        hsc = HSContonurMatch(r19201080)
+        locations = hsc.list_card_spells(imgpath)
+        assert len(locations) == 2
+        imgpath = 'test\\test_data\\list_spell2.png'
+        r19201080.debug_img = True
         hsc = HSContonurMatch(r19201080)
         locations = hsc.list_card_spells(imgpath)
         assert len(locations) == 2
 
-
     def test_find_greenready(self):
         imgpath = 'test\\test_data\\ready.png'
-        r19201080.debug = True
+        r19201080.debug_img = True
         hsc = HSContonurMatch(r19201080)
         locations = hsc.find_battle_green_ready(imgpath)
         assert len(locations) == 1
 
 t = Test_Countor()
-t.test_list_map_moves()
+t.test_list_spell()

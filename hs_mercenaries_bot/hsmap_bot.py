@@ -1,12 +1,15 @@
 
 import random
+
+from hs_mercenaries_bot.hscontour_match import HSContonurMatch
 from .hstemplate_match import MAPACTIONS
 from .hsbot import HSBot
 
 class HSMapBot(HSBot):
-    def __init__(self,hssetting):
+    def __init__(self, hssetting, is_path_to_mysterious=True):
         super(HSMapBot, self).__init__(hssetting)
-        self.mysterious_loc = self.find_mysterious_position()
+        self.mysterious_loc = []
+        self.is_path_to_mysterious = is_path_to_mysterious
      
     def find_mysterious_position(self):
         ss = self.hssetting.screenshot() 
@@ -56,6 +59,22 @@ class HSMapBot(HSBot):
             return action  
         return None      
 
+    def path_to_mysterious(self,moves):
+        move_checks = []
+        new_move = []
+        if moves == [] or self.mysterious_loc == []:
+            return moves
+        if self.mysterious_loc != []:
+            mx = self.mysterious_loc[0][0]
+            for idx in range(len(moves)):
+                move_checks.append( [ abs(moves[idx][0] - mx),idx] )
+
+        move_checks = HSContonurMatch.sort_2d_array(move_checks)
+        for move_check in move_checks:   
+            new_move.append(moves[move_check[1]])
+        return new_move  
+       
+
     def move(self):
         imgpath = self.hssetting.screenshot()
         action = None
@@ -65,6 +84,12 @@ class HSMapBot(HSBot):
             action = self._move_action(mysterious_location[0])
         if action == None:
             moves = self.hscontonur.list_map_moves(imgpath)
+            if moves != []:
+                print("start to find the find_mysterious_position1")
+                if self.is_path_to_mysterious and self.mysterious_loc == []:
+                    print("start to find the find_mysterious_position2")
+                    self.mysterious_loc = self.find_mysterious_position()
+                moves = self.path_to_mysterious(moves)
             for move in moves:
                 action = self._move_action(move)
                 if action != None:

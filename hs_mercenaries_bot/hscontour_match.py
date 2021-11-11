@@ -218,7 +218,7 @@ class HSContonurMatch:
             if h*2/5 < cy < h*3/5:
                 return True
             return False 
-        return self._hsv_contour(imgpath,(40,130,255),(90,255,255),300,1000,0,30,kernal=[13,13],contour_position=position)
+        return self._hsv_contour(imgpath,(30,130,255),(90,255,255),300,1000,0,30,kernal=[13,13],contour_position=position)
 
     def find_battle_green_ready(self,imgpath):
         def position(w,h,cx,cy):

@@ -5,9 +5,11 @@ from .hsbot import HSBot
 
 
 class HSBattleBot(HSBot):
-    def __init__(self,hssetting):
+    def __init__(self,hssetting,cards_move,spells):
         super(HSBattleBot, self).__init__(hssetting)
         self.battle_finished = False
+        self.cards_move = cards_move
+        self.spells = spells
  
     def _pickup_card(self,x,y,seq):
         self.ahk.mouse_move(x , y ,speed=40)
@@ -15,21 +17,20 @@ class HSBattleBot(HSBot):
 
 
 
-    def battle_prepare(self,cards_move):
+    def battle_prepare(self):
         self.hssetting.debug_msg("Start to check the battle prepare",self)
         self.retry_to_find_locations(self.hsmatch.find_battle_played) #detect played button to ensure it's the right place
         self.hssetting.debug_msg("The battle is ready",self)
         self.click_left_blank() 
-        cards_move = np.sort(cards_move)
-        for seq in range(len(cards_move)):
+        self.cards_move = np.sort(self.cards_move)
+        ## add green play check
+        for seq in range(len(self.cards_move)):
             locations = self.retry_to_find_locations(self.hscontonur.list_allow_move_cards ) 
             if locations != []:
-                card_position = locations[ cards_move[seq] - seq - 1 ]
+                card_position = locations[ self.cards_move[seq] - seq - 1 ]
                 self.hssetting.debug_msg("Card moves nums %s , the seq is %s,location is %s " % (len(locations), seq,card_position) ,self)
                 self._pickup_card(card_position[0], card_position[1],seq)
-                time.sleep(3)
-            # else:
-            #     raise Exception("can't find the minions to move for the battle")
+                time.sleep(2)
         locations = self.retry_to_find_locations(self.hsmatch.find_battle_ready_or_played)
         if len(locations) != 0:
             self.click(locations[0][0], locations[0][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5), sleep_time = 2)
@@ -38,7 +39,7 @@ class HSBattleBot(HSBot):
             raise Exception("can't find the ready button for the battle")
 
 
-    def start_round(self,round_nums,spells):
+    def start_round(self,round_nums):
         self.hssetting.debug_msg("Start to check the start round",self)
         self.retry_to_find_locations(self.hsmatch.find_battle_ready_or_played ) #detect ready button to ensure it's the right place
         self.hssetting.debug_msg("The start round is ready",self)
@@ -63,7 +64,7 @@ class HSBattleBot(HSBot):
             self.hssetting.debug_msg("Start to find the card spells locations",self)
             spell_locations = self.hscontonur.list_card_spells(self.hssetting.screenshot()) # get spell
             if spell_locations != []: 
-                spell_set = spells[ (round_nums-1) % len(spells) ]
+                spell_set = self.spells[ (round_nums-1) % len(self.spells) ]
                 spell_choose = spell_set[seq] - 1
                 if (len(spell_locations)) <= spell_choose:
                     spell_choose = len(spell_locations) - 1
@@ -92,24 +93,25 @@ class HSBattleBot(HSBot):
             self.click(ready_location[0][0], ready_location[0][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
             time.sleep(4) # wait 4 sec to finish the round            
 
-        
+        self._battle_check(round_nums)
 
 
-        self._battle_check(round_nums,spells)
-
-
-    def _battle_check(self,round_nums,spells):
+    def _battle_check(self,round_nums):
         self.hssetting.debug_msg("Start to check find_battle_ready,find_treasure or find_reward ",self)
-        location,action = self.retry_to_find_locations([self.hsmatch.find_battle_ready, self.hsmatch.find_treasure,self.hsmatch.find_reward] ) 
+        location,action = self.retry_to_find_locations([self.hsmatch.find_battle_ready, self.hsmatch.find_treasure,self.hsmatch.find_reward,self.hsmatch.find_battle_played] ) 
         if action == "find_battle_ready" : # start next round
             self.hssetting.debug_msg("The ready location is found ",self)
-            self.start_round(round_nums+1,spells)
+            self.start_round(round_nums+1)
         if action == "find_treasure" : # the battle is finished , choose the first treasure
             self.hssetting.debug_msg("The treasure location is found ",self)
             self._pick_treasure(location)
         if action == "find_reward":  # start to pickup all the rewards
             self.hssetting.debug_msg("The reward location is found ",self)
             self._pick_rewards()
+        if action == "find_battle_played":  # needs to reprepare
+            self.hssetting.debug_msg("The battle reprepare is required",self)
+            self.click(location[0][0], location[0][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
+            self.start_round(round_nums+1)
 
     def _pick_rewards(self):
         self.hssetting.debug_msg("Start to pickup rewards ",self)
@@ -138,10 +140,4 @@ class HSBattleBot(HSBot):
         if treasure_take != []:
             self.click(treasure_take[0][0], treasure_take[0][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
         else:
-            raise Exception("fail to find the treasure take button")                  
-
-
-
-
-            
-        
+            raise Exception("fail to find the treasure take button") 

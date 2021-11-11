@@ -13,7 +13,7 @@ class HSBot:
         self.hscontonur = HSContonurMatch(self.hssetting.resolution)        
 
     def click_left_blank(self):
-        self.click(self.hssetting.resolution.left_black_x_margin , int(self.win.height / 2) + 150,x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
+        self.click(self.hssetting.resolution.left_black_x_margin , int(self.win.height / 2) + 150,x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 0.5)
 
     def click_right_blank(self):
         self.click(self.win.width - 150 , int(self.win.height * 2 / 3 ),x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 0.5)
@@ -29,7 +29,7 @@ class HSBot:
 
     def click(self , x,y, x_margin=0,y_margin=0 ,sleep_time = 0):
         if sleep_time ==0:
-            sleep_time = random.randint(3,6)
+            sleep_time = random.randint(1,2)
         move_speed = random.randint(10,20)
         self.ahk.mouse_move(x + x_margin, y +y_margin, speed=move_speed) 
         self.ahk.click()
@@ -37,14 +37,14 @@ class HSBot:
 
     def right_click(self , x,y, x_margin=0,y_margin=0 ,sleep_time = 0):
         if sleep_time ==0:
-            sleep_time = random.randint(3,6)
+            sleep_time = random.randint(1,2)
         move_speed = random.randint(10,20)
         self.ahk.mouse_move(x + x_margin, y +y_margin, speed=move_speed) 
         self.ahk.right_click()
         time.sleep(sleep_time)
                 
 
-    def retry_to_find_locations(self, location_calls,max_retry=20 ,err_if_not_found = True ):
+    def retry_to_find_locations(self, location_calls,max_retry=30 ,err_if_not_found = True ):
       
         retry = 0
         location = []
@@ -54,7 +54,7 @@ class HSBot:
         while (len(location) == 0 and retry < max_retry):
             if retry != 0:
                 self.click_left_blank()
-                time.sleep(3)
+                time.sleep(2)
                 self.hssetting.debug_msg("retry to find the %s  %s  " % (action_call.__name__,retry))
             retry +=1
             for action_call in action_calls:
