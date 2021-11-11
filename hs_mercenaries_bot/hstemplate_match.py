@@ -143,7 +143,7 @@ class HSTemplateMatch:
         location = self.is_gold_reward(imgpath)
         if location != []:
             return []
-        return self._right_side_button(imgpath,"ready",min_match_nums=10)[0]
+        return self._right_side_button(imgpath,"ready",min_match_nums=15)[0]
 
     def find_battle_played(self,imgpath):
         location = self.is_gold_reward(imgpath)
@@ -215,8 +215,15 @@ class HSTemplateMatch:
         location,good_nums = self._feature_match(cut_img,action,min_match_nums = min_match_nums, folder="templates/%s" % img_type)
         h, w = img.shape[:2]
         if location != []:
+            if self.debug:
+                self._debug_img_with_text([[location[0] + int(w*left_x_cut_pect) , location[1] ] ],img)
+                self.debug_img("%s_with_text" % action,img)
             return [[location[0] + int(w*left_x_cut_pect) , location[1] ] ] ,good_nums
+        
         return [] ,good_nums
+
+    
+
 
     def _feature_match(self,img,action,min_match_nums= 15, folder="templates"):
         train =  img
@@ -238,21 +245,41 @@ class HSTemplateMatch:
                 if m.distance < ratio *n.distance:
                     good.append([m])
 
-
             if self.debug:
                 img_match = np.empty(( img.shape[0] + 100, query.shape[1] + img.shape[1], 3), dtype=np.uint8)
                 img_debug = cv2.drawMatchesKnn(query,kp1,img,kp2,good,flags=2,outImg=img_match)
                 self.debug_img(action,img_debug)
 
-            if len(good) < min_match_nums:
-                logging.debug("Err - good %s for action %s , less than threshold %s" % (len(good),action,min_match_nums))
+            ## re-group the pts .
+            pts_groups = []
+            pts = np.float32([kp2[m[0].trainIdx].pt for m in good])
+            qh, qw = query.shape[:2]
+            for pt in pts:
+                in_group = False
+                for pts_group in pts_groups:
+                    if pt in pts_group:
+                        in_group = True
+                        break
+                if not in_group:
+                    approx_pts_rows = np.where(   (pts[:,1] >= pt[1] - qh)   &  (pts[:,1] <=   pt[1] + qh  ) & (pts[:,0] >= pt[0] - qw)   &  (pts[:,0] <=   pt[0] + qw  ) )
+                    approx_pts = pts[approx_pts_rows] 
+                    pts_groups.append(approx_pts)
+            
+            max_number_group = []
+            for pts_group in pts_groups:
+                if len(pts_group) > len(max_number_group):
+                    max_number_group = pts_group
+
+            if len(max_number_group) < min_match_nums:
+                logging.debug("Err - good %s for action %s , less than threshold %s" % (len(max_number_group),action,min_match_nums))
                 return [] , len(good)
             else:
-                logging.debug(" good %s for action %s" % (len(good),action))
+                logging.debug(" good %s for action %s" % (len(max_number_group),action))
 
-            pts2 = np.float32([kp2[m[0].trainIdx].pt for m in good])
-            x,y = np.mean(pts2, axis=0)
-            return [int(x),int(y)] ,len(good)
+
+            x,y = np.mean(max_number_group, axis=0)
+     
+            return [int(x),int(y)] ,len(max_number_group)
         except Exception as e:
             print(e)
             return [],0
