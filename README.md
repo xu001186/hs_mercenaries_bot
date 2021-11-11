@@ -50,12 +50,18 @@ The bot numbers the mercenary collections , bountry , mercenaries and spells for
 - Check your mercenary spell order , they are numbered from left to right.
 ![hsv_contour_final_20211107211336](https://user-images.githubusercontent.com/39233649/140640857-bfad6172-fdf5-4aad-8b40-ca216046942b.png)
 
+# How does auto-path mysterious work?
+- The bot traverses the map to find the mysterious vistor  , and get its (x,y) location
+- The bot reorder the moves location based on abs(its(x_axis) - mercenary(x_axis)) ascending order in each hsmap_bot moves.
+- There is no guarantee that the mysterious vistor  will be reached, but it provides the greatest possibility
+
 
 # Support 
 - 1920 * 1080 FULL SCREEN
 
 # KNOWN ISSUE
-- 1 The bot will stops working if the any of mercenary is died.  (FIXED)
+- The bot will stops working if the any of mercenary is died.  (FIXED)
+
 
 
 
