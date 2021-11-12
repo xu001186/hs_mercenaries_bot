@@ -13,10 +13,10 @@ class HSBot:
         self.hscontonur = HSContonurMatch(self.hssetting.resolution)        
 
     def click_left_blank(self):
-        self.click(self.hssetting.resolution.left_black_x_margin , int(self.win.height / 2) + 150,x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 0.5)
+        self.click(self.hssetting.resolution.left_black_x_margin , int(self.win.height / 2) + 150,x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 0.1)
 
     def click_right_blank(self):
-        self.click(self.win.width - 150 , int(self.win.height * 2 / 3 ),x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 0.5)
+        self.click(self.win.width - 150 , int(self.win.height * 2 / 3 ),x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 0.1)
 
     def right_click_left_blank(self):
         self.right_click(self.hssetting.resolution.left_black_x_margin , int(self.win.height / 2) + 150,x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
@@ -30,7 +30,7 @@ class HSBot:
     def click(self , x,y, x_margin=0,y_margin=0 ,sleep_time = 0):
         if sleep_time ==0:
             sleep_time = random.randint(1,2)
-        move_speed = random.randint(10,20)
+        move_speed = random.randint(5,10)
         self.ahk.mouse_move(x + x_margin, y +y_margin, speed=move_speed) 
         self.ahk.click()
         time.sleep(sleep_time)
@@ -38,7 +38,7 @@ class HSBot:
     def right_click(self , x,y, x_margin=0,y_margin=0 ,sleep_time = 0):
         if sleep_time ==0:
             sleep_time = random.randint(1,2)
-        move_speed = random.randint(10,20)
+        move_speed = random.randint(5,10)
         self.ahk.mouse_move(x + x_margin, y +y_margin, speed=move_speed) 
         self.ahk.right_click()
         time.sleep(sleep_time)

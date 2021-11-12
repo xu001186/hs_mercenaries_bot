@@ -6,7 +6,6 @@ class Test_Countor:
 
     def test_list_allow_move_cards(self):
         imgpath = 'test\\test_data\\test_list_allow_move_cards.png'
-
         r19201080.debug_img = True
         hsc = HSContonurMatch(r19201080)
         locations = hsc.list_allow_move_cards(imgpath)
@@ -44,7 +43,14 @@ class Test_Countor:
         r19201080.debug_img = True
         hsc = HSContonurMatch(r19201080)
         locations = hsc.list_map_moves(imgpath)
-        assert len(locations) == 1
+        assert len(locations) == 2
+        imgpath = 'test\\test_data\\list_map_moves2.png'
+        r19201080.debug_img = True
+        hsc = HSContonurMatch(r19201080)
+        locations = hsc.list_map_moves(imgpath)
+        assert len(locations) == 2
+        
+
 
     def test_list_spell(self):
         imgpath = 'test\\test_data\\list_spell.png'
@@ -64,6 +70,3 @@ class Test_Countor:
         hsc = HSContonurMatch(r19201080)
         locations = hsc.find_battle_green_ready(imgpath)
         assert len(locations) == 1
-
-t = Test_Countor()
-t.test_list_spell()

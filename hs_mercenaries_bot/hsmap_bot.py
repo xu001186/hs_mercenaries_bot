@@ -1,4 +1,5 @@
 
+import logging
 import random
 
 from hs_mercenaries_bot.hscontour_match import HSContonurMatch
@@ -52,6 +53,7 @@ class HSMapBot(HSBot):
                 self.reveal()
             if action == MAPACTIONS.pickup:
                 self.pickup()
+                self.click_left_blank()
             if action == MAPACTIONS.visit:
                 self.visit()
             if action == MAPACTIONS.warp:
@@ -85,10 +87,9 @@ class HSMapBot(HSBot):
         if action == None:
             moves = self.hscontonur.list_map_moves(imgpath)
             if moves != []:
-                print("start to find the find_mysterious_position1")
                 if self.is_path_to_mysterious and self.mysterious_loc == []:
-                    print("start to find the find_mysterious_position2")
                     self.mysterious_loc = self.find_mysterious_position()
+                    logging.info("mysterious_loc is %s" % self.mysterious_loc)
                 moves = self.path_to_mysterious(moves)
             for move in moves:
                 action = self._move_action(move)

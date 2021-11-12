@@ -124,7 +124,7 @@ class HSBattleBot(HSBot):
             self.click(done_location[0][0], done_location[0][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
         else:
             raise Exception("fail to click the done rewards")  
-        time.sleep(5)
+        time.sleep(3)
         self.hssetting.debug_msg("Start to find the ok location",self)     
         ok_location = self.retry_to_find_locations(self.hsmatch.find_bounty_finish_ok )        
         if ok_location != []:
@@ -139,5 +139,6 @@ class HSBattleBot(HSBot):
         treasure_take = self.retry_to_find_locations(self.hsmatch.find_treasure_take )
         if treasure_take != []:
             self.click(treasure_take[0][0], treasure_take[0][1],x_margin=random.randint(1,5),y_margin=random.randint(1,5),sleep_time = 1)
+            time.sleep(3) # leave time for the map to be appeared 
         else:
             raise Exception("fail to find the treasure take button") 

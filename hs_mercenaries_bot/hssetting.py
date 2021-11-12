@@ -40,14 +40,14 @@ class HSSetting:
         self.ahk = AHK()
         self.win =self.ahk.win_get(title=CONSTANT.GAME_NAME)
         self.bring_game()
+
     
     def screenshot(self):
         #filename = "{0}.png".format( datetime.now().strftime("%Y%m%d%H%M%S"))
-        id = int(self.screenshot_id % 50)
-        filename = "screenshot_%s.png" % id
+        self.screenshot_id = int(self.screenshot_id % 50)
+        filename = "screenshot_%s.png" % self.screenshot_id
         imgpath = 'files/debug/' + filename
         pyautogui.screenshot(imgpath)
-        self.debug_msg("Screenshot %s" % (id))
         self.screenshot_id +=1
         return imgpath
 
@@ -60,9 +60,9 @@ class HSSetting:
     
     def debug_msg(self,msg,ci=None):
         if ci == None:
-            logging.info("%s - [None]: %s" % (datetime.now().strftime("%Y%m%d-%H:%M:%S") , msg))
+            logging.info("%s - [None]: %s - with screenshot id : %s" % (datetime.now().strftime("%Y%m%d-%H:%M:%S") , msg, self.screenshot_id))
         else:
-            logging.info("%s - [%s] : %s" % (datetime.now().strftime("%Y%m%d-%H:%M:%S"),ci.__class__.__name__,msg))
+            logging.info("%s - [%s] : %s - with screenshot id : %s" % (datetime.now().strftime("%Y%m%d-%H:%M:%S"),ci.__class__.__name__,msg, self.screenshot_id))
 
 
 

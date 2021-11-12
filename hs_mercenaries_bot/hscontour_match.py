@@ -215,10 +215,10 @@ class HSContonurMatch:
 
     def list_card_spells(self,imgpath):
         def position(w,h,cx,cy):
-            if h*2/5 < cy < h*3/5:
+            if h*0.35 < cy < h*0.55:
                 return True
             return False 
-        return self._hsv_contour(imgpath,(30,130,255),(90,255,255),300,1000,0,30,kernal=[13,13],contour_position=position)
+        return self._hsv_contour(imgpath,(30,130,255),(90,255,255),300,1000,0,30,kernal=[9,9],contour_position=position)
 
     def find_battle_green_ready(self,imgpath):
         def position(w,h,cx,cy):
@@ -299,41 +299,21 @@ class HSContonurMatch:
         return locations
 
 
-    #Todo - make it more accurate 
     def list_map_moves(self,imgpath):
-        img = cv2.imread(imgpath)
-        cropped_img = HSContonurMatch.crop_img(img,0,7/24,0,1/4)    
-        img_hsv = cv2.cvtColor(cropped_img, cv2.COLOR_BGR2HSV)  
-        gold_mask = cv2.inRange(img_hsv,(40,100,0),(179,255,255))
-        kernel = np.ones((11, 11), 'uint8')
-        gold_mask = cv2.dilate(gold_mask, kernel)
-        contours, _ = cv2.findContours(gold_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-        self.debug_img("list_map_moves_mask",gold_mask)
-        locations = []
-        for contour in contours:
-            approx = cv2.approxPolyDP( contour, 0.01 * cv2.arcLength(contour, False), False) 
-            area = cv2.contourArea(contour)
-            arcLength = cv2.arcLength(contour, False)
-                                                                  # exclude the hexagon "view party"
-            if ((  arcLength >= 600) and (  area >= 10000) and len(approx) > 10):
-                M = cv2.moments(contour)
-                if M['m00'] != 0.0:
-                    cx = int(M['m10']/M['m00'])
-                    cy = int(M['m01']/M['m00'])
-                    locations.append([cx,cy-10])
-                    if self.debug:
-                        cv2.drawContours(cropped_img,[contour],0, (random.randint(0,256), random.randint(0,256), random.randint(0,256)),2  )
-        self.debug_img("list_map_moves_contours",cropped_img)
-        locations = HSContonurMatch.sort_2d_array(locations)
-        if self.debug:
-            self._debug_img_with_text(locations,img)
-            self.debug_img("list_map_moves_final",cropped_img)
-        return locations
-
+        def position(w,h,cx,cy):
+            if w*0.15 < cx < 0.71* w and cy <= 0.65*h:
+                return True
+            return False 
+        locations_1 =  self._hsv_contour(imgpath,(19,160,100),(39,240,205),600,1000,0,-10,kernal=[11,11],contour_position=position)
+        
+        locations_2 =  self._hsv_contour(imgpath,(40,100,0),(150,255,255),600,1000,0,-10,kernal=[11,11],contour_position=position)
+        if locations_1 != [] and locations_2 !=[]:
+            return np.concatenate( (locations_1,locations_2))
+        return locations_1 if locations_1 !=[] else locations_2
 
     def debug_img(self,img_name,img,save_to="files/debug/"):
         if (self.debug):
-            filename = "{0}_{1}.png".format(img_name, datetime.now().strftime("%Y%m%d%H%M%S"))
+            filename = "{0}_{1}.png".format(img_name, datetime.now().strftime("%Y%m%d%H%M%S%f"))
             img_path = os.path.join(save_to, filename)
             cv2.imwrite(img_path,img)
 

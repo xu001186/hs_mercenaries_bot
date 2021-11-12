@@ -53,7 +53,7 @@ class Test_Template:
         assert len(locations) == 1
 
     def test_find_scoll(self):
-        imgpath = 'test\\test_data\\find_mysterious.png'
+        imgpath = 'test\\test_data\\map_begin.png'
         r19201080.debug_img = True
         hsc = HSTemplateMatch(r19201080)
         locations = hsc.find_map_scoll(imgpath)
@@ -82,4 +82,7 @@ class Test_Template:
         hsc = HSTemplateMatch(r19201080)
         locations = hsc.find_map_begin(imgpath)
         assert len(locations) == 0
+
+
+
 
