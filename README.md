@@ -8,31 +8,23 @@
 3) Ensure the hearthstone is running in 1920*1080 resolution
 ![Capture](https://user-images.githubusercontent.com/39233649/140640534-f558dacc-2227-44fa-83b6-b63ae731b36d.PNG)
 4) Pre-build your mercenary collection . 
-5) Open the start.py , update the spells , bounty_no and mercenary_collection base on What the order number means section.
+5) Open the config.py , update the spells , bounty_no and mercenary_collection base on What the order number means section.
 ```python
 # the mercernaries pickup order, in this case, the card 1,2 and 3 are picked.
-mercenaries = [1,2,3] 
+mercenaries = [1,2,3]
 # the spell order , in this case ,the card1 ,card2 and card3 are using the spell1 in the first round ,
 # in 2nd round the card1 is using the spell 3, and card 2 is using spell 2 and the card 3 is using the spell 2 . 
 # in 3rd round , the card1 ,card2 and card3 are using the spell 1 , and so on.  
-spells = [[1,1,1],[3,2,2]] 
-# the first bounty is selected .
-bounty_no = 1
-# the firsrt mercenary is selected
-mercenary_collection = 1 # refer to 
-bounty.start(bounty_no,mercenary_collection)
-while True:
-    time.sleep(1)
-    action = map.move()
-    if action == MAPACTIONS.play:
-        print("start battle")
-        battle.battle_prepare(mercenaries)
-        print("start round")
-        battle.start_round(1, spells =spells )
-        if battle.battle_finished:
-            battle.battle_finished = False
-            bounty.start(bounty_no,mercenary_collection)
-            print("it's end,start next turn")
+spells = [[1,1,1],[2,3,3]]
+# the bounty selection order, in this case , the 5th bounty is selected.
+bounty_no = 5
+# the mercenary collection selection order, in this case , the 3rd collection is selected
+mercenary_collection = 3
+# whether the bot traverses the map to find the mysterious vistor
+is_path_to_mysterious = True
+# Is the bot starts from bounty selection
+start_from_bounty = True
+
 
 ```
 8) Click into the Bountries selection page.
@@ -51,13 +43,13 @@ The bot numbers the mercenary collections , bountry , mercenaries and spells for
 ![hsv_contour_final_20211107211336](https://user-images.githubusercontent.com/39233649/140640857-bfad6172-fdf5-4aad-8b40-ca216046942b.png)
 
 # How does auto-path mysterious work?
-- The bot traverses the map to find the mysterious vistor  , and get its (x,y) location
-- The bot reorder the moves location based on abs(its(x_axis) - mercenary(x_axis)) ascending order in each hsmap_bot moves.
-- There is no guarantee that the mysterious vistor  will be reached, but it provides the greatest possibility
+- The bot traverses the map to find the mysterious vistor , and get its (x,y) location
+- The bot reorder the move locations based on abs(its(x_axis) - mercenary(x_axis)) ascending order .
+- There is no guarantee that the mysterious vistor will be reached, but it provides the greatest possibility
 
 
 # Support 
-- 1920 * 1080 FULL SCREEN
+- 1920 * 1080 - FULL SCREEN - ENG
 
 # KNOWN ISSUE
 - The bot will stops working if the any of mercenary is died.  (FIXED)
@@ -66,12 +58,21 @@ The bot numbers the mercenary collections , bountry , mercenaries and spells for
 
 
 # Todo:
- 1) Pickup the "allow minion move" from power.log to get card names. ( None)
- 2) Once the rewards are collected , re-choose the boss and start over . (Done)
- 3) Refine the battle spell choose.
- 4) Auto find the path to mysterious (DONE)
+ 1) Once the rewards are collected , re-choose the boss and start over . (Done)
+ 2) Refine the battle spell choose.
+ 3) Auto find the path to mysterious (DONE)
+ 4) Selective mercenary to pick the mysterious task.
 
 # Update History
+
+
+## Update 2021/11/12.
+- Add config
+- Rewrite the list_map_moves
+- Add test cases
+
+## Update 2021/11/11.
+- Update feature match to make it's more accurate 
 
 ## Update 2021/11/11.
 - Update HSBattleBot to fix the known issue 1)
