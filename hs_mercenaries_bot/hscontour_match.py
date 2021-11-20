@@ -99,17 +99,19 @@ class HSContonurMatch:
         kernel = np.ones((5, 5), 'uint8')
         bg = cv2.dilate(img_gray, kernel)
         img_decrease_bright=cv2.divide(img_gray, bg, scale=255)
-        img_without_bg=cv2.threshold(img_decrease_bright, 230, 255, cv2.THRESH_OTSU )[1] 
-        img_without_bg = cv2.bitwise_not(img_without_bg) 
-        self.debug_img("list_allow_move_cards_without_bg_img",img_without_bg)    
-        contours, _ = cv2.findContours(img_without_bg, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        img_decrease_bright=cv2.divide(img_decrease_bright, bg, scale=255)
+        self.debug_img("list_allow_move_img_decrease_bright",img_decrease_bright)       
+        canny_img =  cv2.Canny(img_decrease_bright,0,255)    
+        canny_img = cv2.dilate(canny_img, kernel)
+        self.debug_img("list_allow_move_canny_img",canny_img)  
+        contours, _ = cv2.findContours(canny_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         cards_locations = []
         minion_locations = []
         h, w = img.shape[:2]
         for contour in contours:
             area = cv2.contourArea(contour)
             arcLength = cv2.arcLength(contour, False)
-            if (( arcLength >= 500) and (area >= 3000)):
+            if (( arcLength >= 500) and (area >= 2000)):
                 extTop = tuple(contour[contour[:, :, 1].argmin()][0])
                 extBot = tuple(contour[contour[:, :, 1].argmax()][0])                    
                 if  (h *1 / 2 < extTop[1] <=h*3 /4 ): # the cards position
@@ -225,7 +227,7 @@ class HSContonurMatch:
             if w*3/5 < cx :
                 return True
             return False 
-        return self._hsv_contour(imgpath,(40,130,255),(90,255,255),300,1000,0,30,kernal=[13,13],contour_position=position)
+        return self._hsv_contour(imgpath,(40,130,255),(90,255,255),300,1000,0,20,kernal=[13,13],contour_position=position)
 
 
     def list_rewards(self,imgpath):

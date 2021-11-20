@@ -62,6 +62,7 @@ class HSBot:
                 if (len(location) == 0 and retry <= max_retry ):
                     continue
                 else:
+                    self.hssetting.debug_msg("Found the action %s , location is %s  " % (action_call.__name__,location))
                     if isinstance(location_calls,list): 
                         return location  , action_call.__name__
                     return location

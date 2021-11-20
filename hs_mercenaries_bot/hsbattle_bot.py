@@ -107,6 +107,8 @@ class HSBattleBot(HSBot):
             self._pick_treasure(location)
         if action == "find_reward":  # start to pickup all the rewards
             self.hssetting.debug_msg("The reward location is found ",self)
+            #wait until all the rewards come out
+            time.sleep(3)
             self._pick_rewards()
         if action == "find_battle_played":  # needs to reprepare
             self.hssetting.debug_msg("The battle reprepare is required",self)
