@@ -29,8 +29,10 @@ while True:
         battle.start_round(1 )
         if battle.battle_finished:
             battle.battle_finished = False
+            map.mysterious_loc = [] # reset mysterious_loc
             print("it's end,start next turn %s" % times)
             hs.debug_msg("it's end,start next turn %s" % times)
             times +=1
             bounty.start(bounty_no,mercenary_collection)
+
 
